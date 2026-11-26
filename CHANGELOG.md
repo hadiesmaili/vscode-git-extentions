@@ -3,6 +3,11 @@
 All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.7.1] - 2026-11-26
+
+### Fixed
+- Settings modal: in a short window the **About** button was squeezed and its label sat at the bottom edge. Tab buttons no longer shrink, and About now sits in its own footer under the scrolling tab list.
+
 ## [0.7.0] - 2026-11-26
 
 ### Added
@@ -78,6 +83,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - Source Control sidebar: stage, discard, commit, amend and sync.
 - Inline blame on the current line.
 
+[0.7.1]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.6.1...v0.7.0
 [0.6.1]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.5.0...v0.6.0

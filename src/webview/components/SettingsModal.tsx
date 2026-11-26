@@ -68,18 +68,13 @@ export function SettingsModal({ onClose, initialTab = 'appearance' }: { onClose:
             </div>
           </div>
           <div className="nav-items" role="tablist" aria-orientation="vertical">
-            {TABS.map((t) => (
-              <button
-                key={t.id}
-                role="tab"
-                aria-selected={tab === t.id}
-                className={cx('nav-item', tab === t.id && 'on', t.id === 'about' && 'about')}
-                onClick={() => setTab(t.id)}
-              >
-                <Icon name={t.icon} />
-                <span>{t.label}</span>
-              </button>
+            {TABS.filter((t) => t.id !== 'about').map((t) => (
+              <NavItem key={t.id} t={t} on={tab === t.id} onClick={() => setTab(t.id)} />
             ))}
+          </div>
+          {/* About sits in a fixed footer so it never shares (or shrinks in) the scrolling list. */}
+          <div className="nav-foot" role="tablist" aria-orientation="vertical">
+            <NavItem t={TABS.find((t) => t.id === 'about')!} on={tab === 'about'} onClick={() => setTab('about')} />
           </div>
         </nav>
 
@@ -98,6 +93,15 @@ export function SettingsModal({ onClose, initialTab = 'appearance' }: { onClose:
         </section>
       </div>
     </div>
+  );
+}
+
+function NavItem({ t, on, onClick }: { t: (typeof TABS)[number]; on: boolean; onClick: () => void }) {
+  return (
+    <button role="tab" aria-selected={on} className={cx('nav-item', on && 'on')} onClick={onClick}>
+      <Icon name={t.icon} />
+      <span>{t.label}</span>
+    </button>
   );
 }
 
