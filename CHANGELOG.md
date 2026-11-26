@@ -3,6 +3,14 @@
 All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.7.3] - 2026-11-26
+
+### Added
+- Commit context menu: merge into current branch, rebase current branch onto commit, compare with working tree, show details, copy short hash.
+
+### Changed
+- All numbers (hashes, counts, diff stats, date card ISO and timestamp chips) use the soft number font.
+
 ## [0.7.2] - 2026-11-26
 
 ### Changed

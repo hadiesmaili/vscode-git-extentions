@@ -921,3 +921,8 @@ body.vscode-light[data-theme='auto'] .ref {
   padding-top: 10px;
   border-top: 1px solid var(--border);
 }
+.dc-foot .chip {
+  font-family: var(--num-font);
+  font-variant-numeric: tabular-nums;
+  unicode-bidi: plaintext;
+}
