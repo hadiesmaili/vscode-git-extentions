@@ -1,0 +1,14 @@
+src/**
+test/**
+node_modules/**
+**/*.map
+**/*.ts
+*.png
+code.html
+DESIGN.md
+readme.md
+esbuild.mjs
+tsconfig.json
+pnpm-*.yaml
+.gitignore
+!media/icon.png

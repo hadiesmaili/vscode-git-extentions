@@ -1,0 +1,199 @@
+{
+  "name": "git-workspace",
+  "displayName": "Git Workspace",
+  "description": "Modern Git graph, source control and inline blame for VS Code.",
+  "version": "0.2.0",
+  "publisher": "git-workspace",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "SCM Providers",
+    "Visualization"
+  ],
+  "keywords": [
+    "git",
+    "graph",
+    "history",
+    "blame",
+    "source control"
+  ],
+  "icon": "media/icon.png",
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "workspaceContains:.git",
+    "onStartupFinished"
+  ],
+  "extensionDependencies": [],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "gitWorkspace",
+          "title": "Git Workspace",
+          "icon": "media/activity.svg"
+        }
+      ]
+    },
+    "views": {
+      "gitWorkspace": [
+        {
+          "type": "webview",
+          "id": "gitWorkspace.sidebar",
+          "name": "Git"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "gitWorkspace.openGraph",
+        "title": "Open Git Graph",
+        "category": "Git Workspace",
+        "icon": "$(git-merge)"
+      },
+      {
+        "command": "gitWorkspace.refresh",
+        "title": "Refresh",
+        "category": "Git Workspace",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "gitWorkspace.fetch",
+        "title": "Fetch",
+        "category": "Git Workspace"
+      },
+      {
+        "command": "gitWorkspace.pull",
+        "title": "Pull",
+        "category": "Git Workspace"
+      },
+      {
+        "command": "gitWorkspace.push",
+        "title": "Push",
+        "category": "Git Workspace"
+      },
+      {
+        "command": "gitWorkspace.selectRepository",
+        "title": "Select Repository",
+        "category": "Git Workspace"
+      },
+      {
+        "command": "gitWorkspace.toggleInlineBlame",
+        "title": "Toggle Inline Blame",
+        "category": "Git Workspace"
+      },
+      {
+        "command": "gitWorkspace.showCommit",
+        "title": "Show Commit in Git Graph",
+        "category": "Git Workspace"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "gitWorkspace.openGraph",
+          "when": "view == gitWorkspace.sidebar",
+          "group": "navigation"
+        },
+        {
+          "command": "gitWorkspace.refresh",
+          "when": "view == gitWorkspace.sidebar",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "gitWorkspace.showCommit",
+          "when": "false"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "gitWorkspace.openGraph",
+        "key": "ctrl+alt+g",
+        "mac": "cmd+alt+g"
+      }
+    ],
+    "configuration": {
+      "title": "Git Workspace",
+      "properties": {
+        "gitWorkspace.theme": {
+          "type": "string",
+          "enum": [
+            "brand",
+            "auto"
+          ],
+          "enumDescriptions": [
+            "Obsidian look from the design (fixed dark palette).",
+            "Follow the active VS Code color theme; only accent and lane colors are custom."
+          ],
+          "default": "brand",
+          "description": "Visual theme of the Git Workspace views."
+        },
+        "gitWorkspace.graph.density": {
+          "type": "string",
+          "enum": [
+            "compact",
+            "comfortable",
+            "spacious"
+          ],
+          "enumDescriptions": [
+            "28px rows, maximum density.",
+            "36px rows.",
+            "54px rows with large nodes and a branch column, like the design."
+          ],
+          "default": "comfortable",
+          "description": "Row height of the commit graph."
+        },
+        "gitWorkspace.graph.pageSize": {
+          "type": "number",
+          "default": 500,
+          "minimum": 50,
+          "description": "Number of commits loaded per page."
+        },
+        "gitWorkspace.avatars.gravatar": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Load author avatars from Gravatar. **Privacy:** sends a hash of each author email to gravatar.com. Custom avatars always take priority."
+        },
+        "gitWorkspace.inlineBlame.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show author and commit at the end of the current line."
+        },
+        "gitWorkspace.inlineBlame.format": {
+          "type": "string",
+          "default": "${author}, ${timeAgo} • ${summary}",
+          "description": "Inline blame format. Variables: ${author}, ${timeAgo}, ${summary}, ${hash}, ${date}."
+        },
+        "gitWorkspace.inlineBlame.delay": {
+          "type": "number",
+          "default": 150,
+          "description": "Delay in ms before inline blame appears."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "typecheck": "tsc --noEmit -p .",
+    "test": "vitest run",
+    "package": "node esbuild.mjs --production && vsce package --no-dependencies"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/vscode": "^1.90.0",
+    "@vscode/codicons": "^0.0.36",
+    "esbuild": "^0.24.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}
