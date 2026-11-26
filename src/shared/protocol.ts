@@ -107,6 +107,7 @@ export interface HostApi {
 
   openCommitFile(p: { hash: string; parent?: string; file: FileChange }): void;
   openChange(p: { file: FileChange; staged: boolean }): void;
+  compareWithWorkingTree(p: { hash: string }): void;
   openFile(p: { path: string }): void;
 
   stage(p: { paths: string[] }): void;

@@ -289,6 +289,11 @@ export class Repository {
     return this.git.run(['rebase', ref]);
   }
 
+  /** Files that differ between a commit and the working tree. */
+  async diffWithWorkingTree(hash: string): Promise<FileChange[]> {
+    return parseNameStatus(await this.git.run(['diff', '--name-status', '-z', '-M', hash]));
+  }
+
   cherryPick(hash: string) {
     return this.git.run(['cherry-pick', hash]);
   }

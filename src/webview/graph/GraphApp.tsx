@@ -265,6 +265,7 @@ export function GraphApp() {
     return [
       { header: `${short} · ${c.subject.slice(0, 40)}` },
       { label: 'Show commit details', icon: 'eye', run: () => openDetails(row) },
+      { label: 'Compare with working tree', icon: 'diff-multiple', run: () => act('compareWithWorkingTree', { hash: c.hash }) },
       { separator: true },
       { label: 'Copy commit hash', icon: 'copy', hint: short, run: () => act('copy', { text: c.hash, label: short }) },
       { label: 'Copy short hash', icon: 'copy', run: () => act('copy', { text: short, label: short }) },

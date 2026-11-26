@@ -35,7 +35,7 @@ const METHODS: { [K in Method]: true } = {
   openCommitFile: true, openChange: true, openFile: true,
   stage: true, unstage: true, discard: true, commit: true, lastCommitMessage: true,
   checkout: true, createBranch: true, deleteBranch: true, renameBranch: true, merge: true, rebase: true,
-  cherryPick: true, revert: true, reset: true, createTag: true, deleteTag: true, pushRef: true,
+  cherryPick: true, compareWithWorkingTree: true, revert: true, reset: true, createTag: true, deleteTag: true, pushRef: true,
   fetch: true, pull: true, push: true, sync: true, stash: true, stashPop: true, initRepo: true,
   abortOperation: true, continueOperation: true,
   pickBranch: true, selectRepository: true, openGraph: true, copy: true, getSettings: true, setDensity: true, setCalendar: true,

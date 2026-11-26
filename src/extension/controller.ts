@@ -154,6 +154,21 @@ export class Controller implements HostImpl {
     await vscode.commands.executeCommand('vscode.diff', left, right, `${name} (${short})`, preview(true));
   }
 
+  async compareWithWorkingTree(p: { hash: string }): Promise<void> {
+    const repo = this.repo;
+    const short = p.hash.slice(0, 7);
+    const files = await repo.diffWithWorkingTree(p.hash);
+    if (!files.length) return void vscode.window.showInformationMessage(`Working tree matches ${short}.`);
+    const empty = (f: string) => gitUri(repo.root, '', f);
+    const resources = files.map((f) => {
+      const work = vscode.Uri.file(path.join(repo.root, f.path));
+      const left = f.status === 'A' ? empty(f.path) : gitUri(repo.root, p.hash, f.oldPath ?? f.path);
+      const right = f.status === 'D' ? empty(f.path) : work;
+      return [work, left, right];
+    });
+    await vscode.commands.executeCommand('vscode.changes', `${short} ↔ Working Tree`, resources);
+  }
+
   async openChange(p: { file: FileChange; staged: boolean }): Promise<void> {
     const repo = this.repo;
     const f = p.file;
