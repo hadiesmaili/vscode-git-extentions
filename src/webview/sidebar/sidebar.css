@@ -1,0 +1,438 @@
+.sb {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 10px 12px 12px;
+  gap: 10px;
+}
+
+.grow {
+  flex: 1;
+}
+.muted {
+  color: var(--text-muted);
+}
+
+/* ---------- Branch row ---------- */
+
+.sb-top {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.branch-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 30px;
+  min-width: 0;
+  max-width: 70%;
+  padding: 0 10px;
+  margin-right: 6px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    border-color 0.14s,
+    background 0.14s;
+}
+.branch-pill:hover {
+  border-color: var(--border-strong);
+  background: var(--elevated);
+}
+.branch-pill > .codicon:first-child {
+  color: var(--accent-text);
+  font-size: 14px;
+}
+.branch-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.branch-pill .chev {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ---------- Sync strip ---------- */
+
+.sync {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 4px 0 10px;
+  border-radius: 8px;
+  background: var(--hover);
+  border: 1px solid var(--border);
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+.sync > .codicon {
+  font-size: 13px;
+  color: var(--text-faint);
+}
+.upstream {
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.ab {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  font-size: 11px;
+  color: var(--text-faint);
+}
+.ab .codicon {
+  font-size: 11px;
+}
+.ab.on {
+  color: var(--accent-text);
+  font-weight: 600;
+}
+.sync-btn {
+  height: 22px;
+  padding: 0 8px;
+  font-size: 11.5px;
+  margin-left: 4px;
+}
+.sync-btn .codicon {
+  font-size: 12px;
+}
+
+/* ---------- Operation banner ---------- */
+
+.op-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px 8px 10px;
+  border-radius: 10px;
+  background: var(--warning-soft);
+  border: 1px solid color-mix(in srgb, var(--warning) 35%, transparent);
+  color: var(--warning);
+  flex-wrap: wrap;
+}
+.op-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 120px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+.op-text strong {
+  color: var(--text);
+  font-size: 12px;
+}
+.op-banner .btn {
+  height: 24px;
+  font-size: 11.5px;
+}
+
+/* ---------- Working tree card ---------- */
+
+.wt-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--warning) 22%, var(--border));
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--warning) 7%, transparent), transparent 60%),
+    var(--card);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    transform 0.08s;
+  --tone: var(--warning);
+}
+.wt-card.clean {
+  --tone: var(--success);
+  border-color: color-mix(in srgb, var(--success) 22%, var(--border));
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--success) 8%, transparent), transparent 60%),
+    var(--card);
+}
+.wt-card:hover {
+  border-color: color-mix(in srgb, var(--tone) 45%, var(--border));
+}
+.wt-card:active {
+  transform: scale(0.99);
+}
+.wt-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex: none;
+  color: var(--tone);
+  background: color-mix(in srgb, var(--tone) 14%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--tone) 55%, transparent);
+  box-shadow: 0 0 18px -4px color-mix(in srgb, var(--tone) 60%, transparent);
+}
+.wt-icon .codicon {
+  font-size: 16px;
+}
+.wt-card:not(.clean) .wt-icon .codicon {
+  font-size: 10px;
+}
+.wt-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+.wt-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+.wt-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.wt-go {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: 0 4px 14px -4px color-mix(in srgb, var(--accent) 80%, transparent);
+  transition: transform 0.15s;
+}
+.wt-card:hover .wt-go {
+  transform: translateX(2px);
+}
+
+/* ---------- Sections ---------- */
+
+.sb-scroll {
+  flex: 1;
+  min-height: 60px;
+  overflow: auto;
+  margin: 0 -6px;
+  padding: 0 6px;
+}
+
+.section + .section {
+  margin-top: 6px;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  z-index: 2;
+}
+.section-head:hover {
+  background: color-mix(in srgb, var(--surface) 90%, white);
+}
+.section-head .chev {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.section-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+.section.conflicts .section-title {
+  color: var(--danger);
+}
+.section-actions {
+  display: none;
+  gap: 1px;
+}
+.section-head:hover .section-actions,
+.section-head:focus-within .section-actions {
+  display: inline-flex;
+}
+
+.files {
+  list-style: none;
+  margin: 2px 0 0;
+  padding: 0;
+}
+.file {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 6px 0 10px;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.file:hover {
+  background: var(--hover-strong);
+}
+.file.active {
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
+}
+.file .codicon {
+  font-size: 14px;
+  flex: none;
+}
+.fname {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+  white-space: nowrap;
+}
+.file.deleted .fname {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+.fdir {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  direction: rtl;
+  text-align: left;
+  min-width: 0;
+  flex: 0 1 auto;
+}
+.row-actions {
+  display: none;
+  gap: 1px;
+}
+.file:hover .row-actions,
+.file:focus-within .row-actions,
+.file.active .row-actions {
+  display: inline-flex;
+}
+.files-empty {
+  padding: 8px 10px 10px 30px;
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+/* ---------- Commit box ---------- */
+
+.commit-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.amend-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--warning);
+}
+.amend-note .codicon {
+  font-size: 12px;
+}
+.link {
+  margin-left: auto;
+  border: none;
+  background: none;
+  color: var(--accent-text);
+  cursor: pointer;
+  font-size: 11.5px;
+  padding: 0;
+}
+.link:hover {
+  text-decoration: underline;
+}
+
+.msg {
+  position: relative;
+  display: flex;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  transition:
+    border-color 0.14s,
+    box-shadow 0.14s;
+}
+.msg:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+.msg-icon {
+  position: absolute;
+  left: 11px;
+  top: 10px;
+  font-size: 14px !important;
+  color: var(--accent-text);
+  opacity: 0.85;
+}
+.msg textarea {
+  flex: 1;
+  resize: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 12.5px;
+  line-height: 1.5;
+  padding: 8px 10px 8px 32px;
+  min-height: 36px;
+  max-height: 160px;
+}
+.msg textarea::placeholder {
+  color: var(--text-faint);
+}
+
+.commit-actions {
+  display: flex;
+  gap: 1px;
+}
+.commit-btn {
+  flex: 1;
+  height: 36px;
+  border-radius: 10px 0 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+  gap: 8px;
+}
+.commit-btn .kbd {
+  margin-left: 4px;
+}
+.commit-more {
+  width: 34px;
+  height: 36px;
+  padding: 0;
+  border-radius: 0 10px 10px 0;
+}
+.commit-more .codicon {
+  font-size: 14px;
+}
