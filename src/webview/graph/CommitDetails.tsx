@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import type { CommitDetail, FileChange } from '../../shared/protocol';
 import { Avatar, Icon, IconButton, RefBadge } from '../components/ui';
 import { act, call } from '../lib/rpc';
-import { cx, fileIcon, fullDate, splitPath, timeAgo } from '../lib/util';
+import { cx, fileIcon, splitPath, timeAgo } from '../lib/util';
+import { dateHoverProps } from '../components/DateCard';
 
 const UNCOMMITTED = '*';
 
@@ -89,7 +90,7 @@ export function CommitDetails({
                     <p className="muted">
                       <span title={d.email}>{d.author}</span>
                       <span className="dot">•</span>
-                      <span title={fullDate(d.date)}>{timeAgo(d.date, false)}</span>
+                      <span className="date-hover" {...dateHoverProps(d.date)}>{timeAgo(d.date, false)}</span>
                       {d.committer && d.committer !== d.author && (
                         <>
                           <span className="dot">•</span>

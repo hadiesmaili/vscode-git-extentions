@@ -1,10 +1,10 @@
-import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { AuthorInfo } from '../../shared/protocol';
+import { dateTime, shortDate } from '../lib/dates';
+import { closeOnOutside, createHover, placeCard } from '../lib/hover';
 import { act, call } from '../lib/rpc';
-import { fullDate, timeAgo } from '../lib/util';
+import { timeAgo } from '../lib/util';
 import { Avatar, Icon } from './ui';
-
-// ---------- hover controller (one card for the whole view) ----------
 
 interface Target {
   name: string;
@@ -12,53 +12,13 @@ interface Target {
   rect: DOMRect;
 }
 
-let target: Target | null = null;
-let showTimer: ReturnType<typeof setTimeout> | undefined;
-let hideTimer: ReturnType<typeof setTimeout> | undefined;
-const subs = new Set<() => void>();
-const emit = () => subs.forEach((l) => l());
-
-export const authorHover = {
-  enter(el: HTMLElement, name: string, email: string) {
-    clearTimeout(hideTimer);
-    clearTimeout(showTimer);
-    const same = target && target.email === email && target.name === name;
-    showTimer = setTimeout(
-      () => {
-        target = { name, email, rect: el.getBoundingClientRect() };
-        emit();
-      },
-      same ? 0 : 380,
-    );
-  },
-  leave() {
-    clearTimeout(showTimer);
-    clearTimeout(hideTimer);
-    hideTimer = setTimeout(() => {
-      target = null;
-      emit();
-    }, 200);
-  },
-  keep() {
-    clearTimeout(hideTimer);
-  },
-  close() {
-    clearTimeout(showTimer);
-    target = null;
-    emit();
-  },
-};
-
-const subscribe = (l: () => void) => {
-  subs.add(l);
-  return () => subs.delete(l);
-};
+export const authorHover = createHover<{ name: string; email: string }>(380);
 
 // ---------- card ----------
 
 /** Render once per view. `onShowCommits` filters the list by author (graph only). */
 export function AuthorCardHost({ onShowCommits }: { onShowCommits?: (a: { name: string; email: string }) => void }) {
-  const t = useSyncExternalStore(subscribe, () => target);
+  const t = authorHover.useTarget();
   if (!t) return null;
   return <AuthorCard key={`${t.name}<${t.email}>`} t={t} onShowCommits={onShowCommits} />;
 }
@@ -79,29 +39,10 @@ function AuthorCard({ t, onShowCommits }: { t: Target; onShowCommits?: (a: { nam
   }, [t.name, t.email]);
 
   useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    const gap = 8;
-    let left = t.rect.right - r.width;
-    if (left < 8) left = Math.min(t.rect.left, window.innerWidth - r.width - 8);
-    let top = t.rect.bottom + gap;
-    if (top + r.height > window.innerHeight - 8) top = t.rect.top - r.height - gap;
-    setPos({ left: Math.max(8, left), top: Math.max(8, top) });
+    if (ref.current) setPos(placeCard(t.rect, ref.current.getBoundingClientRect()));
   }, [t, info]);
 
-  useEffect(() => {
-    const close = () => authorHover.close();
-    const key = (e: KeyboardEvent) => e.key === 'Escape' && close();
-    window.addEventListener('scroll', close, true);
-    window.addEventListener('keydown', key);
-    window.addEventListener('blur', close);
-    return () => {
-      window.removeEventListener('scroll', close, true);
-      window.removeEventListener('keydown', key);
-      window.removeEventListener('blur', close);
-    };
-  }, []);
+  useEffect(() => closeOnOutside(authorHover.close), []);
 
   const run = (fn: () => void) => () => {
     authorHover.close();
@@ -145,12 +86,12 @@ function AuthorCard({ t, onShowCommits }: { t: Target; onShowCommits?: (a: { nam
           <span className="ac-num mono">{info ? info.commits.toLocaleString() : '…'}</span>
           <span className="ac-label">commits</span>
         </div>
-        <div className="ac-stat" title={info?.last ? fullDate(info.last) : undefined}>
+        <div className="ac-stat" title={info?.last ? dateTime(info.last) : undefined}>
           <span className="ac-num">{info?.last ? timeAgo(info.last) : '—'}</span>
           <span className="ac-label">last commit</span>
         </div>
-        <div className="ac-stat" title={info?.first ? fullDate(info.first) : undefined}>
-          <span className="ac-num">{info?.first ? new Date(info.first * 1000).toLocaleDateString(undefined, { year: 'numeric', month: 'short' }) : '—'}</span>
+        <div className="ac-stat" title={info?.first ? dateTime(info.first) : undefined}>
+          <span className="ac-num">{info?.first ? shortDate(info.first) : '—'}</span>
           <span className="ac-label">first commit</span>
         </div>
       </div>

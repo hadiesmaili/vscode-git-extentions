@@ -40,7 +40,7 @@ export function Avatar({ name, email, size = 22, card = true }: { name: string; 
   const url = useAvatarUrl(email);
   const hover = card
     ? {
-        onMouseEnter: (e: React.MouseEvent<HTMLElement>) => authorHover.enter(e.currentTarget, name, email ?? ''),
+        onMouseEnter: (e: React.MouseEvent<HTMLElement>) => authorHover.enter(e.currentTarget, { name, email: email ?? '' }),
         onMouseLeave: () => authorHover.leave(),
       }
     : {};

@@ -1,6 +1,6 @@
 import * as path from 'node:path';
 import * as vscode from 'vscode';
-import type { AuthorInfo, CommitDetail, Density, FileChange, GraphData, GraphQuery, HostImpl, Ref, ResetMode, Settings, StatusInfo } from '../shared/protocol';
+import type { AuthorInfo, Calendar, CommitDetail, Density, FileChange, GraphData, GraphQuery, HostImpl, Ref, ResetMode, Settings, StatusInfo } from '../shared/protocol';
 import type { AvatarStore } from './avatars';
 import { GitError } from './git/gitClient';
 import { EMPTY_TREE, Repository, UNCOMMITTED } from './git/repository';
@@ -88,11 +88,16 @@ export class Controller implements HostImpl {
       density: c.get<Density>('graph.density', 'comfortable'),
       pageSize: c.get<number>('graph.pageSize', 500),
       gravatar: c.get<boolean>('avatars.gravatar', false),
+      calendar: c.get<Calendar>('calendar', 'gregory'),
     };
   }
 
   async setDensity(p: { density: Density }): Promise<void> {
     await vscode.workspace.getConfiguration('gitWorkspace').update('graph.density', p.density, vscode.ConfigurationTarget.Global);
+  }
+
+  async setCalendar(p: { calendar: Calendar }): Promise<void> {
+    await vscode.workspace.getConfiguration('gitWorkspace').update('calendar', p.calendar, vscode.ConfigurationTarget.Global);
   }
 
   lastCommitMessage(): Promise<string> {

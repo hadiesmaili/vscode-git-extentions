@@ -50,7 +50,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       if (e.affectsConfiguration('gitWorkspace.theme')) {
         graph?.reloadHtml();
         sidebar.reloadHtml();
-      } else if (e.affectsConfiguration('gitWorkspace.graph') || e.affectsConfiguration('gitWorkspace.avatars')) {
+      } else if (
+        e.affectsConfiguration('gitWorkspace.graph') || e.affectsConfiguration('gitWorkspace.avatars') ||
+        e.affectsConfiguration('gitWorkspace.calendar')
+      ) {
         const settings = controller.getSettings();
         graph?.post({ kind: 'event', name: 'settingsChanged', settings });
         sidebar.post({ kind: 'event', name: 'settingsChanged', settings });

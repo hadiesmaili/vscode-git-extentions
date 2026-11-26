@@ -15,16 +15,6 @@ export function timeAgo(unix: number, short = true): string {
   return 'just now';
 }
 
-export function fullDate(unix: number): string {
-  return new Date(unix * 1000).toLocaleString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
-
 export function initials(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
   if (!parts.length) return '?';

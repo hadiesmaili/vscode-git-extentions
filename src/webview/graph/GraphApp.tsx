@@ -2,7 +2,9 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import type { GraphData, GraphRow, GraphScope, Ref, Settings } from '../../shared/protocol';
 import { Avatar, Empty, Icon, IconButton, ProgressBar, RefBadge, useMenu, type MenuEntry } from '../components/ui';
 import { act, call, onEvent, vscode } from '../lib/rpc';
-import { cx, fullDate, timeAgo } from '../lib/util';
+import { cx, timeAgo } from '../lib/util';
+import { setCalendar as applyCalendar } from '../lib/dates';
+import { DateCardHost, dateHoverProps } from '../components/DateCard';
 import { AuthorCardHost } from '../components/AuthorCard';
 import { CommitDetails } from './CommitDetails';
 import { GraphCanvas, type Geometry } from './GraphCanvas';
@@ -82,6 +84,10 @@ export function GraphApp() {
       }),
     [load],
   );
+
+  useEffect(() => {
+    if (settings) applyCalendar(settings.calendar);
+  }, [settings?.calendar]);
 
   const g: Geometry = useMemo(() => {
     const d = settings?.density;
@@ -510,7 +516,7 @@ export function GraphApp() {
                           {c.author}
                         </div>
                         <div className="col-hash mono">{c.hash.slice(0, 7)}</div>
-                        <div className="col-date mono" title={fullDate(c.date)}>
+                        <div className="col-date mono" {...dateHoverProps(c.date)}>
                           {timeAgo(c.date)}
                         </div>
                         <div className="col-avatar">
@@ -563,6 +569,7 @@ export function GraphApp() {
         </div>
       )}
       {menu.node}
+      <DateCardHost />
       <AuthorCardHost onShowCommits={(a) => setSearch(a.email || a.name)} />
     </div>
   );

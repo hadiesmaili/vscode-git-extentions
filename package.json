@@ -2,7 +2,7 @@
   "name": "git-workspace",
   "displayName": "Git Workspace",
   "description": "Modern Git graph, source control and inline blame for VS Code.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "git-workspace",
   "license": "MIT",
   "engines": {
@@ -152,6 +152,21 @@
           "default": 500,
           "minimum": 50,
           "description": "Number of commits loaded per page."
+        },
+        "gitWorkspace.calendar": {
+          "type": "string",
+          "enum": [
+            "gregory",
+            "persian",
+            "islamic-umalqura"
+          ],
+          "enumDescriptions": [
+            "Gregorian (میلادی)",
+            "Solar Hijri (شمسی)",
+            "Lunar Hijri, Umm al-Qura (قمری)"
+          ],
+          "default": "gregory",
+          "description": "Calendar used for full dates in the Git Graph."
         },
         "gitWorkspace.avatars.gravatar": {
           "type": "boolean",

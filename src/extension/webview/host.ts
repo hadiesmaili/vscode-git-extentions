@@ -38,7 +38,7 @@ const METHODS: { [K in Method]: true } = {
   cherryPick: true, revert: true, reset: true, createTag: true, deleteTag: true, pushRef: true,
   fetch: true, pull: true, push: true, sync: true, stash: true, stashPop: true, initRepo: true,
   abortOperation: true, continueOperation: true,
-  pickBranch: true, selectRepository: true, openGraph: true, copy: true, getSettings: true, setDensity: true,
+  pickBranch: true, selectRepository: true, openGraph: true, copy: true, getSettings: true, setDensity: true, setCalendar: true,
   getAvatars: true, getAuthor: true, setAvatar: true, removeAvatar: true,
 };
 const ALLOWED = new Set<string>(Object.keys(METHODS));

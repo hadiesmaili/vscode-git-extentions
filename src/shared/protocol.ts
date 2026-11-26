@@ -151,6 +151,7 @@ export interface HostApi {
   setAvatar(p: { name: string; email: string }): void;
   removeAvatar(p: { email: string }): void;
   setDensity(p: { density: Density }): void;
+  setCalendar(p: { calendar: Calendar }): void;
 }
 
 export type Density = 'compact' | 'comfortable' | 'spacious';
@@ -160,7 +161,10 @@ export interface Settings {
   density: Density;
   pageSize: number;
   gravatar: boolean;
+  calendar: Calendar;
 }
+
+export type Calendar = 'gregory' | 'persian' | 'islamic-umalqura';
 
 export interface AuthorInfo {
   name: string;
