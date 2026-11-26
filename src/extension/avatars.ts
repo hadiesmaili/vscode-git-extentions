@@ -24,6 +24,10 @@ export class AvatarStore {
     return this.state.get<Record<string, string>>(KEY, {});
   }
 
+  list(): string[] {
+    return Object.keys(this.custom).sort();
+  }
+
   has(email: string): boolean {
     return !!this.custom[norm(email)];
   }

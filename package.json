@@ -2,7 +2,7 @@
   "name": "git-workspace",
   "displayName": "Git Workspace",
   "description": "Modern Git graph, source control and inline blame for VS Code.",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "publisher": "git-workspace",
   "license": "MIT",
   "engines": {
@@ -123,10 +123,12 @@
           "type": "string",
           "enum": [
             "brand",
+            "light",
             "auto"
           ],
           "enumDescriptions": [
             "Obsidian look from the design (fixed dark palette).",
+            "Light version of the design palette.",
             "Follow the active VS Code color theme; only accent and lane colors are custom."
           ],
           "default": "brand",

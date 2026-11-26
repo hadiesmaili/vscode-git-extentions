@@ -6,7 +6,8 @@
   background: var(--bg);
 }
 
-body[data-theme='brand'] .graph-app {
+body[data-theme='brand'] .graph-app,
+body[data-theme='light'] .graph-app {
   background:
     radial-gradient(1200px 400px at 0% 0%, rgba(99, 102, 241, 0.06), transparent 60%),
     radial-gradient(900px 400px at 100% 100%, rgba(34, 211, 238, 0.03), transparent 60%),

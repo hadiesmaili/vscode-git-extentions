@@ -4,8 +4,11 @@ import { Avatar, Empty, Icon, IconButton, ProgressBar, RefBadge, useMenu, type M
 import { act, call, onEvent, vscode } from '../lib/rpc';
 import { cx, timeAgo } from '../lib/util';
 import { setCalendar as applyCalendar } from '../lib/dates';
+import { applyTheme } from '../lib/theme';
 import { DateCardHost, dateHoverProps } from '../components/DateCard';
 import { AuthorCardHost } from '../components/AuthorCard';
+import { SettingsModal } from '../components/SettingsModal';
+import '../components/settings.css';
 import { CommitDetails } from './CommitDetails';
 import { GraphCanvas, type Geometry } from './GraphCanvas';
 
@@ -36,6 +39,7 @@ export function GraphApp() {
   const [search, setSearch] = useState('');
   const [matchIdx, setMatchIdx] = useState(0);
   const [version, setVersion] = useState(0);
+  const [showSettings, setShowSettings] = useState(false);
   const menu = useMenu();
 
   const listRef = useRef<HTMLDivElement>(null);
@@ -88,6 +92,10 @@ export function GraphApp() {
   useEffect(() => {
     if (settings) applyCalendar(settings.calendar);
   }, [settings?.calendar]);
+
+  useEffect(() => {
+    if (settings) applyTheme(settings.theme);
+  }, [settings?.theme]);
 
   const g: Geometry = useMemo(() => {
     const d = settings?.density;
@@ -425,6 +433,7 @@ export function GraphApp() {
 
         <IconButton icon="list-flat" title="View options" onClick={(e) => viewMenu(e.currentTarget as HTMLElement)} />
         <IconButton icon="repo-fetch" title="Fetch from all remotes" className="accent" spin={busy === 'Fetch'} onClick={() => act('fetch')} />
+        <IconButton icon="settings-gear" title="Settings" className={cx(showSettings && 'active')} onClick={() => setShowSettings(true)} />
       </header>
 
       <div className="graph-main">
@@ -568,6 +577,14 @@ export function GraphApp() {
         </div>
       )}
       {menu.node}
+      {showSettings && (
+        <SettingsModal
+          onClose={() => {
+            setShowSettings(false);
+            listRef.current?.focus();
+          }}
+        />
+      )}
       <DateCardHost />
       <AuthorCardHost onShowCommits={(a) => setSearch(a.email || a.name)} />
     </div>

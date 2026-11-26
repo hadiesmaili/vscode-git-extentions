@@ -10,7 +10,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   const repos = new RepoManager(context.workspaceState);
   let graph: GraphPanel | undefined;
   const avatars = new AvatarStore(context.globalState);
-  const controller = new Controller(repos, (hash) => graph?.show(hash), avatars);
+  const version = String((context.extension.packageJSON as { version?: string }).version ?? '');
+  const controller = new Controller(repos, (hash) => graph?.show(hash), avatars, version);
   graph = new GraphPanel(context.extensionUri, controller);
   const sidebar = new SidebarProvider(context.extensionUri, controller);
 
@@ -47,17 +48,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       await c.update('enabled', !c.get('enabled', true), vscode.ConfigurationTarget.Global);
     }),
     vscode.workspace.onDidChangeConfiguration((e) => {
-      if (e.affectsConfiguration('gitWorkspace.theme')) {
-        graph?.reloadHtml();
-        sidebar.reloadHtml();
-      } else if (
-        e.affectsConfiguration('gitWorkspace.graph') || e.affectsConfiguration('gitWorkspace.avatars') ||
-        e.affectsConfiguration('gitWorkspace.calendar')
-      ) {
-        const settings = controller.getSettings();
-        graph?.post({ kind: 'event', name: 'settingsChanged', settings });
-        sidebar.post({ kind: 'event', name: 'settingsChanged', settings });
+      if (!e.affectsConfiguration('gitWorkspace')) return;
+      // Webviews apply theme and other settings live, without a reload.
+      const settings = controller.getSettings();
+      graph?.post({ kind: 'event', name: 'settingsChanged', settings });
+      sidebar.post({ kind: 'event', name: 'settingsChanged', settings });
+      if (e.affectsConfiguration('gitWorkspace.avatars')) {
         graph?.post({ kind: 'event', name: 'avatarsChanged' });
+        sidebar.post({ kind: 'event', name: 'avatarsChanged' });
       }
     }),
   );

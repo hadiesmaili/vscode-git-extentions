@@ -48,10 +48,6 @@ export class GraphPanel {
   post(e: HostEvent): void {
     this.binding?.post(e);
   }
-
-  reloadHtml(): void {
-    if (this.panel) this.panel.webview.html = getHtml(this.panel.webview, this.extUri, 'graph', theme());
-  }
 }
 
 /** Sidebar webview in the activity bar. */

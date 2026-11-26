@@ -152,17 +152,46 @@ export interface HostApi {
   removeAvatar(p: { email: string }): void;
   setDensity(p: { density: Density }): void;
   setCalendar(p: { calendar: Calendar }): void;
+
+  getConfig(): Config;
+  updateSetting(p: { key: SettingKey; value: unknown }): void;
+  /** Opens the VS Code settings UI filtered to this extension. */
+  openSettings(): void;
 }
 
 export type Density = 'compact' | 'comfortable' | 'spacious';
 
+export type Theme = 'brand' | 'light' | 'auto';
+
 export interface Settings {
-  theme: 'brand' | 'auto';
+  theme: Theme;
   density: Density;
   pageSize: number;
   gravatar: boolean;
   calendar: Calendar;
 }
+
+/** Everything the settings modal shows. */
+export interface Config extends Settings {
+  blameEnabled: boolean;
+  blameFormat: string;
+  blameDelay: number;
+  customAvatars: string[];
+  version: string;
+  vscodeVersion: string;
+  repoName?: string;
+}
+
+/** Keys under the gitWorkspace configuration section the webview may write. */
+export type SettingKey =
+  | 'theme'
+  | 'graph.density'
+  | 'graph.pageSize'
+  | 'calendar'
+  | 'avatars.gravatar'
+  | 'inlineBlame.enabled'
+  | 'inlineBlame.format'
+  | 'inlineBlame.delay';
 
 export type Calendar = 'gregory' | 'persian' | 'islamic-umalqura';
 

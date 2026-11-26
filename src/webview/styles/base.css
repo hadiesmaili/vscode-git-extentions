@@ -44,6 +44,55 @@ body[data-theme='brand'] {
   --lane-7: #2dd4bf;
 }
 
+/* Light: day version of the design palette. */
+body[data-theme='light'] {
+  --bg: #f6f7fb;
+  --surface: #eef0f6;
+  --card: #ffffff;
+  --elevated: #ffffff;
+  --hover: rgba(15, 23, 42, 0.04);
+  --hover-strong: rgba(15, 23, 42, 0.07);
+  --border: rgba(15, 23, 42, 0.09);
+  --border-strong: rgba(15, 23, 42, 0.16);
+  --text: #1b1e2b;
+  --text-muted: #5b6278;
+  --text-faint: #8a90a6;
+  --accent: #5b5bf0;
+  --accent-hover: #4b4be0;
+  --accent-text: #4338ca;
+  --accent-soft: rgba(91, 91, 240, 0.1);
+  --accent-border: rgba(91, 91, 240, 0.35);
+  --on-accent: #ffffff;
+  --success: #059669;
+  --success-soft: rgba(5, 150, 105, 0.1);
+  --warning: #c2710c;
+  --warning-soft: rgba(217, 119, 6, 0.1);
+  --danger: #dc2626;
+  --danger-soft: rgba(220, 38, 38, 0.08);
+  --info: #0284c7;
+  --focus: #6366f1;
+  --input-bg: #ffffff;
+  --overlay: rgba(255, 255, 255, 0.94);
+  --shadow: 0 12px 32px rgba(15, 23, 42, 0.14), 0 2px 6px rgba(15, 23, 42, 0.08);
+  --lane-0: #6366f1;
+  --lane-1: #0891b2;
+  --lane-2: #ea580c;
+  --lane-3: #16a34a;
+  --lane-4: #db2777;
+  --lane-5: #ca8a04;
+  --lane-6: #7c3aed;
+  --lane-7: #0d9488;
+}
+body[data-theme='light'] .ref {
+  color: color-mix(in srgb, var(--c) 78%, black);
+}
+body[data-theme='light'] .avatar {
+  color: hsl(var(--h) 70% 96%);
+}
+body[data-theme='light'] .tone-yellow {
+  color: #b58900;
+}
+
 /* Auto: follow the active VS Code theme; keep accent and lanes. */
 body[data-theme='auto'] {
   --bg: var(--vscode-editor-background);
@@ -302,7 +351,7 @@ button {
 .ref.tag {
   --c: var(--warning);
 }
-body.vscode-light .ref {
+body.vscode-light[data-theme='auto'] .ref {
   color: color-mix(in srgb, var(--c) 80%, black);
 }
 

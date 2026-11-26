@@ -1,6 +1,6 @@
 import * as path from 'node:path';
 import * as vscode from 'vscode';
-import type { AuthorInfo, Calendar, CommitDetail, Density, FileChange, GraphData, GraphQuery, HostImpl, Ref, ResetMode, Settings, StatusInfo } from '../shared/protocol';
+import type { AuthorInfo, Calendar, CommitDetail, Config, SettingKey, Theme, Density, FileChange, GraphData, GraphQuery, HostImpl, Ref, ResetMode, Settings, StatusInfo } from '../shared/protocol';
 import type { AvatarStore } from './avatars';
 import { GitError } from './git/gitClient';
 import { EMPTY_TREE, Repository, UNCOMMITTED } from './git/repository';
@@ -17,6 +17,7 @@ export class Controller implements HostImpl {
     private readonly repos: RepoManager,
     private readonly openGraphPanel: (hash?: string) => void,
     private readonly avatars: AvatarStore,
+    private readonly version: string,
   ) {}
 
   onBusy(l: Busy): vscode.Disposable {
@@ -84,7 +85,7 @@ export class Controller implements HostImpl {
   getSettings(): Settings {
     const c = vscode.workspace.getConfiguration('gitWorkspace');
     return {
-      theme: c.get<'brand' | 'auto'>('theme', 'brand'),
+      theme: c.get<Theme>('theme', 'brand'),
       density: c.get<Density>('graph.density', 'comfortable'),
       pageSize: c.get<number>('graph.pageSize', 500),
       gravatar: c.get<boolean>('avatars.gravatar', false),
@@ -98,6 +99,30 @@ export class Controller implements HostImpl {
 
   async setCalendar(p: { calendar: Calendar }): Promise<void> {
     await vscode.workspace.getConfiguration('gitWorkspace').update('calendar', p.calendar, vscode.ConfigurationTarget.Global);
+  }
+
+  getConfig(): Config {
+    const c = vscode.workspace.getConfiguration('gitWorkspace');
+    return {
+      ...this.getSettings(),
+      blameEnabled: c.get<boolean>('inlineBlame.enabled', true),
+      blameFormat: c.get<string>('inlineBlame.format', '${author}, ${timeAgo} • ${summary}'),
+      blameDelay: c.get<number>('inlineBlame.delay', 150),
+      customAvatars: this.avatars.list(),
+      version: this.version,
+      vscodeVersion: vscode.version,
+      repoName: this.repos.repository?.name,
+    };
+  }
+
+  async updateSetting(p: { key: SettingKey; value: unknown }): Promise<void> {
+    const check = SETTING_RULES[p.key];
+    if (!check || !check(p.value)) throw new Error(`Invalid value for ${p.key}`);
+    await vscode.workspace.getConfiguration('gitWorkspace').update(p.key, p.value, vscode.ConfigurationTarget.Global);
+  }
+
+  async openSettings(): Promise<void> {
+    await vscode.commands.executeCommand('workbench.action.openSettings', '@ext:git-workspace.git-workspace');
   }
 
   lastCommitMessage(): Promise<string> {
@@ -486,6 +511,21 @@ export class Controller implements HostImpl {
     if (ok) await this.avatars.remove(p.email);
   }
 }
+
+const oneOf = (...v: unknown[]) => (x: unknown) => v.includes(x);
+const intIn = (min: number, max: number) => (x: unknown) => Number.isInteger(x) && (x as number) >= min && (x as number) <= max;
+
+/** Validation for every setting the webview may write. */
+const SETTING_RULES: Record<SettingKey, (v: unknown) => boolean> = {
+  theme: oneOf('brand', 'light', 'auto'),
+  'graph.density': oneOf('compact', 'comfortable', 'spacious'),
+  'graph.pageSize': intIn(50, 5000),
+  calendar: oneOf('gregory', 'persian', 'islamic-umalqura'),
+  'avatars.gravatar': (v) => typeof v === 'boolean',
+  'inlineBlame.enabled': (v) => typeof v === 'boolean',
+  'inlineBlame.format': (v) => typeof v === 'string' && v.length <= 200,
+  'inlineBlame.delay': intIn(0, 2000),
+};
 
 /** Diffs opened from the graph go beside it so the graph stays visible. */
 function preview(beside = false) {

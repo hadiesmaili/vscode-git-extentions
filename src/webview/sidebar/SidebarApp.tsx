@@ -2,6 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import type { FileChange, StatusInfo } from '../../shared/protocol';
 import { Empty, Icon, IconButton, ProgressBar, useMenu, type MenuEntry } from '../components/ui';
 import { act, call, onEvent, vscode } from '../lib/rpc';
+import { applyTheme } from '../lib/theme';
 import { cx, fileIcon, splitPath } from '../lib/util';
 
 interface Persisted {
@@ -42,6 +43,7 @@ export function SidebarApp() {
     return onEvent((e) => {
       if (e.name === 'repoChanged') load();
       else if (e.name === 'busy') setBusy(e.busy ? (e.label ?? 'Working') : null);
+      else if (e.name === 'settingsChanged') applyTheme(e.settings.theme);
     });
   }, [load]);
 
