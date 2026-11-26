@@ -5,6 +5,18 @@
   "version": "0.5.0",
   "publisher": "git-workspace",
   "license": "MIT",
+  "author": {
+    "name": "Hadi Esmaeili",
+    "url": "https://github.com/hadiesmaili"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hadiesmaili/vscode-git-extentions.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hadiesmaili/vscode-git-extentions/issues"
+  },
+  "homepage": "https://github.com/hadiesmaili/vscode-git-extentions#readme",
   "engines": {
     "vscode": "^1.90.0"
   },
@@ -224,6 +236,12 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "typescript": "^5.6.0",
-    "vitest": "^2.1.0"
+    "vitest": "^2.1.0",
+    "@vscode/vsce": "^3.2.0"
+  },
+  "packageManager": "pnpm@12.15.0",
+  "galleryBanner": {
+    "color": "#13151f",
+    "theme": "dark"
   }
 }

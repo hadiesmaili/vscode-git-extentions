@@ -1,0 +1,56 @@
+# Changelog
+
+All notable changes to this project are documented here.
+The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
+
+## [0.5.0] - 2026-11-26
+
+### Added
+- Graph color palettes: Vivid (default), Pastel, Neon, Ocean, Sunset and Graphite, chosen in Settings → Appearance with a live preview.
+- Palettes are darkened automatically on light themes.
+- Automated GitHub releases: pushing a `vX.Y.Z` tag builds the `.vsix` and publishes it.
+
+## [0.4.0] - 2026-11-26
+
+### Added
+- Settings modal (⚙ next to Fetch) with side tabs: Appearance, Graph & Dates, Avatars, Inline Blame, Features and About.
+- Day (light) theme alongside Night and Follow VS Code.
+
+### Changed
+- Theme changes apply live without reloading the view.
+
+## [0.3.1] - 2026-11-26
+
+### Changed
+- Removed the author column from the commit list; the avatar and its hover card show the author.
+- In Spacious density, branch badges wrap onto two lines, and extra refs collapse into a `+N` badge.
+
+## [0.3.0] - 2026-11-26
+
+### Added
+- Date hover card: relative and full time, time zone, Gregorian / Solar Hijri (Shamsi) / Lunar Hijri (Qamari) calendars, and copyable ISO 8601 and Unix values.
+- `gitWorkspace.calendar` setting.
+
+## [0.2.0] - 2026-11-26
+
+### Added
+- Author hover card with commit count, first and last activity, and aliases.
+- Custom avatars per author email, plus optional Gravatar (off by default).
+- Spacious row density with large ring nodes and a separate branch column.
+
+### Fixed
+- The sidebar shows the error with a **Reset view** button instead of going blank.
+- Refresh now reloads the sidebar view.
+
+## 0.1.0 - 2026-11-26 (internal build)
+
+### Added
+- Git Graph with lanes, refs, search, filters, commit details and context menus.
+- Source Control sidebar: stage, discard, commit, amend and sync.
+- Inline blame on the current line.
+
+[0.5.0]: https://github.com/hadiesmaili/vscode-git-extentions/releases/tag/v0.5.0
+[0.4.0]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.3.1...v0.4.0
+[0.3.1]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.3.0...v0.3.1
+[0.3.0]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/hadiesmaili/vscode-git-extentions/commits/v0.2.0
