@@ -70,7 +70,7 @@ function DateCard({ unix, label, rect }: { unix: number; label?: string; rect: D
         <div className="dc-date">{longDate(unix, cal)}</div>
       </div>
       <div className="dc-time">
-        <span className="mono">{clockTime(unix)}</span>
+        <span className="num dc-clock">{clockTime(unix)}</span>
         <span className="dc-tz">
           {utcOffset(unix)}
           {timeZoneName() && ` · ${timeZoneName()}`}

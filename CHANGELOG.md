@@ -3,6 +3,11 @@
 All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.7.2] - 2026-11-26
+
+### Changed
+- Softer number typography: commit dates, section counts and the date card clock use the UI font with tabular digits instead of the monospace font, with a smooth fallback for Persian digits. Commit hashes stay monospace.
+
 ## [0.7.1] - 2026-11-26
 
 ### Fixed
@@ -83,6 +88,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - Source Control sidebar: stage, discard, commit, amend and sync.
 - Inline blame on the current line.
 
+[0.7.2]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.6.1...v0.7.0
 [0.6.1]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.6.0...v0.6.1

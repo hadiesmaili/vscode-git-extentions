@@ -531,7 +531,7 @@ export function GraphApp() {
                     {!row.uncommitted && (
                       <>
                         <div className="col-hash mono">{c.hash.slice(0, 7)}</div>
-                        <div className="col-date mono" {...dateHoverProps(c.date)}>
+                        <div className="col-date num" {...dateHoverProps(c.date)}>
                           {absDates ? compactDateTime(c.date, settings!.calendar) : timeAgo(c.date)}
                         </div>
                         <div className="col-avatar">
