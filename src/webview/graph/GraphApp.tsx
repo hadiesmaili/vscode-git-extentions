@@ -264,13 +264,18 @@ export function GraphApp() {
     }
     return [
       { header: `${short} · ${c.subject.slice(0, 40)}` },
+      { label: 'Show commit details', icon: 'eye', run: () => openDetails(row) },
+      { separator: true },
       { label: 'Copy commit hash', icon: 'copy', hint: short, run: () => act('copy', { text: c.hash, label: short }) },
+      { label: 'Copy short hash', icon: 'copy', run: () => act('copy', { text: short, label: short }) },
       { label: 'Copy commit message', icon: 'quote', run: () => act('copy', { text: c.subject, label: 'message' }) },
       { separator: true },
       { label: 'Checkout (detached)', icon: 'debug-disconnect', disabled: row.isHead, run: () => act('checkout', { ref: c.hash }) },
       { label: 'Create branch here…', icon: 'git-branch-create', run: () => act('createBranch', { from: c.hash }) },
       { label: 'Create tag here…', icon: 'tag', run: () => act('createTag', { hash: c.hash }) },
       { separator: true },
+      { label: 'Merge into current branch', icon: 'git-merge', disabled: row.isHead, run: () => act('merge', { ref: c.hash }) },
+      { label: 'Rebase current branch onto this', icon: 'git-pull-request', disabled: row.isHead, run: () => act('rebase', { ref: c.hash }) },
       { label: 'Cherry-pick', icon: 'git-pull-request-go-to-changes', disabled: row.isHead, run: () => act('cherryPick', { hash: c.hash }) },
       { label: 'Revert commit', icon: 'discard', run: () => act('revert', { hash: c.hash }) },
       { separator: true },
