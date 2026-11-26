@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import type { Config, SettingKey } from '../../shared/protocol';
 import { CALENDARS, longDate } from '../lib/dates';
+import { PALETTES } from '../lib/palette';
 import { act, call, onEvent } from '../lib/rpc';
 import { cx, timeAgo } from '../lib/util';
 import { Avatar, Icon, IconButton } from './ui';
@@ -104,6 +105,7 @@ function patchFor(key: SettingKey, value: unknown): Partial<Config> {
     theme: 'theme',
     'graph.density': 'density',
     'graph.pageSize': 'pageSize',
+    'graph.palette': 'palette',
     calendar: 'calendar',
     'avatars.gravatar': 'gravatar',
     'inlineBlame.enabled': 'blameEnabled',
@@ -187,6 +189,25 @@ function Field({ value, onCommit, type = 'text', min, max, width }: { value: str
   );
 }
 
+/** Tiny three-lane graph drawn with the palette's first colors. */
+function PalettePreview({ colors }: { colors: string[] }) {
+  const [a, b, c] = colors;
+  return (
+    <svg className="palette-preview" viewBox="0 0 120 54" aria-hidden>
+      <path d="M20 4V50" stroke={a} strokeWidth={2.4} fill="none" />
+      <path d="M20 14C20 22 42 18 42 26V34C42 42 20 38 20 46" stroke={b} strokeWidth={2.4} fill="none" />
+      <path d="M20 8C20 14 64 10 64 18V30" stroke={c} strokeWidth={2.4} fill="none" opacity={0.95} />
+      <circle cx={20} cy={8} r={4.5} fill="var(--bg)" stroke={a} strokeWidth={2.4} />
+      <circle cx={42} cy={26} r={4} fill="var(--bg)" stroke={b} strokeWidth={2.2} />
+      <circle cx={64} cy={30} r={4} fill="var(--bg)" stroke={c} strokeWidth={2.2} />
+      <circle cx={20} cy={46} r={4} fill="var(--bg)" stroke={a} strokeWidth={2.2} />
+      <rect x={76} y={6} width={36} height={6} rx={3} fill={a} opacity={0.35} />
+      <rect x={76} y={23} width={30} height={6} rx={3} fill={b} opacity={0.35} />
+      <rect x={76} y={40} width={34} height={6} rx={3} fill={c} opacity={0.35} />
+    </svg>
+  );
+}
+
 // ---------------- tabs ----------------
 
 function Appearance({ cfg, set }: { cfg: Config; set: Set }) {
@@ -213,6 +234,30 @@ function Appearance({ cfg, set }: { cfg: Config; set: Set }) {
                 {cfg.theme === t.id && <Icon name="pass-filled" className="theme-check" />}
               </span>
               <span className="theme-desc">{t.desc}</span>
+            </button>
+          ))}
+        </div>
+      </Row>
+      <Row title="Graph colors" desc="Colors of branch lanes, badges and nodes. Darkened automatically on light themes." stack>
+        <div className="palette-cards">
+          {PALETTES.map((p) => (
+            <button
+              key={p.id}
+              className={cx('palette-card', cfg.palette === p.id && 'on')}
+              aria-pressed={cfg.palette === p.id}
+              onClick={() => set('graph.palette', p.id)}
+            >
+              <PalettePreview colors={p.colors} />
+              <span className="theme-label">
+                {p.label}
+                {cfg.palette === p.id && <Icon name="pass-filled" className="theme-check" />}
+              </span>
+              <span className="swatches">
+                {p.colors.map((c, i) => (
+                  <span key={i} style={{ background: c }} />
+                ))}
+              </span>
+              <span className="theme-desc">{p.desc}</span>
             </button>
           ))}
         </div>

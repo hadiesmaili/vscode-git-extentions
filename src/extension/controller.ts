@@ -1,6 +1,6 @@
 import * as path from 'node:path';
 import * as vscode from 'vscode';
-import type { AuthorInfo, Calendar, CommitDetail, Config, SettingKey, Theme, Density, FileChange, GraphData, GraphQuery, HostImpl, Ref, ResetMode, Settings, StatusInfo } from '../shared/protocol';
+import type { AuthorInfo, Calendar, CommitDetail, Config, Palette, SettingKey, Theme, Density, FileChange, GraphData, GraphQuery, HostImpl, Ref, ResetMode, Settings, StatusInfo } from '../shared/protocol';
 import type { AvatarStore } from './avatars';
 import { GitError } from './git/gitClient';
 import { EMPTY_TREE, Repository, UNCOMMITTED } from './git/repository';
@@ -90,6 +90,7 @@ export class Controller implements HostImpl {
       pageSize: c.get<number>('graph.pageSize', 500),
       gravatar: c.get<boolean>('avatars.gravatar', false),
       calendar: c.get<Calendar>('calendar', 'gregory'),
+      palette: c.get<Palette>('graph.palette', 'vivid'),
     };
   }
 
@@ -520,6 +521,7 @@ const SETTING_RULES: Record<SettingKey, (v: unknown) => boolean> = {
   theme: oneOf('brand', 'light', 'auto'),
   'graph.density': oneOf('compact', 'comfortable', 'spacious'),
   'graph.pageSize': intIn(50, 5000),
+  'graph.palette': oneOf('vivid', 'pastel', 'neon', 'ocean', 'sunset', 'graphite'),
   calendar: oneOf('gregory', 'persian', 'islamic-umalqura'),
   'avatars.gravatar': (v) => typeof v === 'boolean',
   'inlineBlame.enabled': (v) => typeof v === 'boolean',

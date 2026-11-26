@@ -5,6 +5,7 @@ import { act, call, onEvent, vscode } from '../lib/rpc';
 import { cx, timeAgo } from '../lib/util';
 import { setCalendar as applyCalendar } from '../lib/dates';
 import { applyTheme } from '../lib/theme';
+import { applyPalette } from '../lib/palette';
 import { DateCardHost, dateHoverProps } from '../components/DateCard';
 import { AuthorCardHost } from '../components/AuthorCard';
 import { SettingsModal } from '../components/SettingsModal';
@@ -94,8 +95,10 @@ export function GraphApp() {
   }, [settings?.calendar]);
 
   useEffect(() => {
-    if (settings) applyTheme(settings.theme);
-  }, [settings?.theme]);
+    if (!settings) return;
+    applyTheme(settings.theme);
+    applyPalette(settings.palette);
+  }, [settings?.theme, settings?.palette]);
 
   const g: Geometry = useMemo(() => {
     const d = settings?.density;

@@ -169,7 +169,10 @@ export interface Settings {
   pageSize: number;
   gravatar: boolean;
   calendar: Calendar;
+  palette: Palette;
 }
+
+export type Palette = 'vivid' | 'pastel' | 'neon' | 'ocean' | 'sunset' | 'graphite';
 
 /** Everything the settings modal shows. */
 export interface Config extends Settings {
@@ -187,6 +190,7 @@ export type SettingKey =
   | 'theme'
   | 'graph.density'
   | 'graph.pageSize'
+  | 'graph.palette'
   | 'calendar'
   | 'avatars.gravatar'
   | 'inlineBlame.enabled'
