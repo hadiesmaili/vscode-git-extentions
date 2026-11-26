@@ -456,6 +456,21 @@ function About({ cfg }: { cfg: Config }) {
         <dt>License</dt>
         <dd>MIT</dd>
       </dl>
+      <a className="about-contact" href="https://t.me/he_tlg" title="Open in Telegram">
+        <span className="tg-logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18">
+            <path
+              fill="currentColor"
+              d="M9.78 15.27 9.6 19.4c.37 0 .53-.16.72-.35l1.73-1.65 3.58 2.62c.66.36 1.12.17 1.3-.6l2.35-11.03c.22-.98-.36-1.36-1-1.12L4.4 12.67c-.94.37-.93.9-.16 1.13l3.5 1.1 8.12-5.12c.38-.25.73-.11.44.14z"
+            />
+          </svg>
+        </span>
+        <span className="tg-text">
+          <span className="tg-label">Contact on Telegram</span>
+          <span className="tg-id">@he_tlg</span>
+        </span>
+        <Icon name="link-external" />
+      </a>
     </div>
   );
 }

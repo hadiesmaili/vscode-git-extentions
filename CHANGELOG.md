@@ -3,6 +3,14 @@
 All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.7.4] - 2026-11-26
+
+### Added
+- About page: Telegram contact card (@he_tlg).
+
+### Changed
+- Calendar options in settings use English names: Miladi, Shamsi, Ghamari.
+
 ## [0.7.3] - 2026-11-26
 
 ### Added

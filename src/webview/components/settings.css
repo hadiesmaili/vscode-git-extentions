@@ -557,6 +557,55 @@
   color: var(--text);
 }
 
+.about-contact {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  color: var(--text);
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+.about-contact:hover {
+  background: var(--hover);
+  border-color: #229ed9;
+}
+.about-contact:focus-visible {
+  outline: 2px solid #229ed9;
+  outline-offset: 2px;
+}
+.tg-logo {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(135deg, #2aabee, #229ed9);
+}
+.tg-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.3;
+}
+.tg-label {
+  font-size: 11px;
+  color: var(--text-faint);
+}
+.tg-id {
+  font-size: 13px;
+  font-weight: 600;
+}
+.about-contact .codicon {
+  color: var(--text-faint);
+}
+
 /* ---- narrow ---- */
 
 @media (max-width: 620px) {
