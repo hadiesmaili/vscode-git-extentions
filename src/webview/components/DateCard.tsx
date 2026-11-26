@@ -1,8 +1,9 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { CALENDARS, clockTime, isoLocal, longDate, timeZoneName, useCalendar, utcOffset } from '../lib/dates';
+import { openSettingsModal } from '../lib/settingsBus';
 import { closeOnOutside, createHover, placeCard } from '../lib/hover';
 import { act } from '../lib/rpc';
-import { cx, timeAgo } from '../lib/util';
+import { timeAgo } from '../lib/util';
 import { Icon } from './ui';
 
 export const dateHover = createHover<{ unix: number; label?: string }>(350);
@@ -52,20 +53,17 @@ function DateCard({ unix, label, rect }: { unix: number; label?: string; rect: D
           <span className="dc-ago">{timeAgo(unix, false)}</span>
           <span className="dc-label">{label ?? 'Authored'}</span>
         </div>
-        <div className="segmented dc-seg" role="tablist" aria-label="Calendar">
-          {CALENDARS.map((c) => (
-            <button
-              key={c.id}
-              role="tab"
-              aria-selected={c.id === cal}
-              className={cx(c.id === cal && 'on')}
-              title={`${c.label} (${c.native})`}
-              onClick={() => act('setCalendar', { calendar: c.id })}
-            >
-              {c.native}
-            </button>
-          ))}
-        </div>
+        <button
+          className="icon-btn sm dc-edit"
+          title="Change date display (calendar, format)"
+          aria-label="Change date display"
+          onClick={() => {
+            dateHover.close();
+            openSettingsModal('graph');
+          }}
+        >
+          <Icon name="edit" />
+        </button>
       </div>
 
       <div className="dc-main" dir={active.locale.startsWith('fa') ? 'rtl' : 'ltr'}>
@@ -78,21 +76,6 @@ function DateCard({ unix, label, rect }: { unix: number; label?: string; rect: D
           {timeZoneName() && ` · ${timeZoneName()}`}
         </span>
       </div>
-
-      <ul className="dc-list">
-        {CALENDARS.filter((c) => c.id !== cal).map((c) => (
-          <li key={c.id}>
-            <button title={`Use ${c.label}`} onClick={() => act('setCalendar', { calendar: c.id })}>
-              <span className="dc-cal">
-                {c.label} <span className="dc-native">{c.native}</span>
-              </span>
-              <span className="dc-val" dir={c.locale.startsWith('fa') ? 'rtl' : 'ltr'}>
-                {longDate(unix, c.id)}
-              </span>
-            </button>
-          </li>
-        ))}
-      </ul>
 
       <div className="dc-foot">
         <button className="chip mono ghost" title="Copy ISO 8601" onClick={() => act('copy', { text: iso, label: 'ISO date' })}>

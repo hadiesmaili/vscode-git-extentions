@@ -3,6 +3,15 @@
 All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.7.0] - 2026-11-26
+
+### Added
+- `gitWorkspace.dateFormat` setting: show commit dates in the list as relative time ("56m ago", default) or as date and time in the selected calendar. Set it in Settings → Graph & Dates.
+- A ✏️ button on the date card opens Settings directly on **Graph & Dates**.
+
+### Changed
+- The date card shows only the date and time (relative time, full date, clock, time zone, ISO and Unix). The calendar tabs and the list of other calendars were removed; the calendar is chosen in Settings.
+
 ## [0.6.1] - 2026-11-26
 
 ### Fixed
@@ -69,6 +78,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - Source Control sidebar: stage, discard, commit, amend and sync.
 - Inline blame on the current line.
 
+[0.7.0]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.6.1...v0.7.0
 [0.6.1]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.4.0...v0.5.0

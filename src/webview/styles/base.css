@@ -857,15 +857,16 @@ body.vscode-light[data-theme='auto'] .ref {
   font-size: 11px;
   color: var(--text-faint);
 }
-.dc-seg {
+.dc-edit {
   flex: none;
-  padding: 2px;
+  color: var(--text-muted);
 }
-.dc-seg button {
-  height: 22px;
-  padding: 0 8px;
-  font-size: 11.5px;
-  font-family: Vazirmatn, Tahoma, var(--font);
+.dc-edit:hover {
+  color: var(--accent-text);
+  background: var(--accent-soft);
+}
+.dc-time {
+  margin-bottom: 10px;
 }
 .dc-main {
   margin-top: 14px;
@@ -899,42 +900,6 @@ body.vscode-light[data-theme='auto'] .ref {
 .dc-tz {
   font-size: 11px;
   color: var(--text-faint);
-}
-.dc-list {
-  list-style: none;
-  margin: 10px 0;
-  padding: 0;
-}
-.dc-list button {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  min-height: 30px;
-  padding: 4px 8px;
-  border: none;
-  border-radius: 7px;
-  background: transparent;
-  cursor: pointer;
-  text-align: left;
-}
-.dc-list button:hover {
-  background: var(--accent-soft);
-}
-.dc-cal {
-  font-size: 11.5px;
-  color: var(--text-muted);
-  white-space: nowrap;
-}
-.dc-native {
-  color: var(--text-faint);
-  margin-left: 2px;
-}
-.dc-val {
-  font-size: 12px;
-  color: var(--text);
-  text-align: right;
 }
 .dc-foot {
   display: flex;

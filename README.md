@@ -61,7 +61,7 @@ Do your daily Git work without opening a terminal.
 | Author card | Date card |
 |---|---|
 | ![Author card](docs/screenshots/author-card.png) | ![Date card](docs/screenshots/date-card.png) |
-| Commit count, first and last activity, other names used with the same email, and a custom avatar. | Relative and full time with time zone, in the **Gregorian**, **Solar Hijri (Shamsi)** and **Lunar Hijri (Qamari)** calendars, plus ISO 8601 and Unix values. |
+| Commit count, first and last activity, other names used with the same email, and a custom avatar. | Relative and full time with time zone in your calendar (**Gregorian**, **Solar Hijri (Shamsi)** or **Lunar Hijri (Qamari)**), ISO 8601 and Unix values. Use ✏️ to change the calendar or date format. |
 
 ### Inline blame
 
@@ -114,6 +114,7 @@ Everything below can be changed from the ⚙ settings modal or from VS Code sett
 | `gitWorkspace.graph.palette` | `vivid` | `vivid`, `pastel`, `neon`, `ocean`, `sunset` or `graphite` |
 | `gitWorkspace.graph.pageSize` | `500` | Number of commits loaded per page |
 | `gitWorkspace.calendar` | `gregory` | `gregory`, `persian` or `islamic-umalqura` |
+| `gitWorkspace.dateFormat` | `relative` | Commit list dates: `relative` ("56m ago") or `absolute` (date and time) |
 | `gitWorkspace.avatars.gravatar` | `false` | Load avatars from Gravatar (see [Privacy](#privacy)) |
 | `gitWorkspace.inlineBlame.enabled` | `true` | Show inline blame on the current line |
 | `gitWorkspace.inlineBlame.format` | `${author}, ${timeAgo} • ${summary}` | Also supports `${hash}` and `${date}` |

@@ -2,7 +2,7 @@
   "name": "git-workspace",
   "displayName": "Git Workspace",
   "description": "Modern Git graph, source control and inline blame for VS Code.",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "publisher": "git-workspace",
   "license": "MIT",
   "author": {
@@ -194,6 +194,19 @@
           ],
           "default": "gregory",
           "description": "Calendar used for full dates in the Git Graph."
+        },
+        "gitWorkspace.dateFormat": {
+          "type": "string",
+          "enum": [
+            "relative",
+            "absolute"
+          ],
+          "enumDescriptions": [
+            "Relative time, e.g. \"56m ago\".",
+            "Date and time in the selected calendar."
+          ],
+          "default": "relative",
+          "description": "How commit dates are shown in the Git Graph list."
         },
         "gitWorkspace.avatars.gravatar": {
           "type": "boolean",

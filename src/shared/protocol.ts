@@ -170,7 +170,11 @@ export interface Settings {
   gravatar: boolean;
   calendar: Calendar;
   palette: Palette;
+  dateFormat: DateFormat;
 }
+
+/** Commit list dates: "56m ago" or full date and time. */
+export type DateFormat = 'relative' | 'absolute';
 
 export type Palette = 'vivid' | 'pastel' | 'neon' | 'ocean' | 'sunset' | 'graphite';
 
@@ -192,6 +196,7 @@ export type SettingKey =
   | 'graph.pageSize'
   | 'graph.palette'
   | 'calendar'
+  | 'dateFormat'
   | 'avatars.gravatar'
   | 'inlineBlame.enabled'
   | 'inlineBlame.format'

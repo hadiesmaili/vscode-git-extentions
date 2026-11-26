@@ -10,6 +10,11 @@ export const CALENDARS: { id: Calendar; label: string; native: string; locale: s
 let current: Calendar = 'gregory';
 const subs = new Set<() => void>();
 
+/** Compact date + 24h time, e.g. 2026/11/26 14:32 or ۱۴۰۵/۰۹/۰۵، ۱۴:۳۲. */
+export function compactDateTime(unix: number, cal: Calendar = current): string {
+  return fmt(cal, { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }).format(unix * 1000);
+}
+
 export function setCalendar(c: Calendar) {
   if (c === current) return;
   current = c;

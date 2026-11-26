@@ -3,7 +3,8 @@ import type { GraphData, GraphRow, GraphScope, Ref, Settings } from '../../share
 import { Avatar, Empty, Icon, IconButton, ProgressBar, RefBadge, useMenu, type MenuEntry } from '../components/ui';
 import { act, call, onEvent, vscode } from '../lib/rpc';
 import { cx, timeAgo } from '../lib/util';
-import { setCalendar as applyCalendar } from '../lib/dates';
+import { compactDateTime, setCalendar as applyCalendar } from '../lib/dates';
+import { onOpenSettings, type SettingsTab } from '../lib/settingsBus';
 import { applyTheme } from '../lib/theme';
 import { applyPalette } from '../lib/palette';
 import { DateCardHost, dateHoverProps } from '../components/DateCard';
@@ -40,7 +41,8 @@ export function GraphApp() {
   const [search, setSearch] = useState('');
   const [matchIdx, setMatchIdx] = useState(0);
   const [version, setVersion] = useState(0);
-  const [showSettings, setShowSettings] = useState(false);
+  const [settingsTab, setSettingsTab] = useState<SettingsTab | null>(null);
+  useEffect(() => onOpenSettings(setSettingsTab), []);
   const menu = useMenu();
 
   const listRef = useRef<HTMLDivElement>(null);
@@ -91,7 +93,8 @@ export function GraphApp() {
   );
 
   useEffect(() => {
-    if (settings) applyCalendar(settings.calendar);
+    if (!settings) return;
+    applyCalendar(settings.calendar);
   }, [settings?.calendar]);
 
   useEffect(() => {
@@ -112,6 +115,7 @@ export function GraphApp() {
   const graphW = g.padX * 2 + lanes * g.laneW;
   // Spacious: 3 badges + "+N" fill two wrapped lines of two.
   const maxRefs = 3;
+  const absDates = settings?.dateFormat === 'absolute';
 
   // ---------- search ----------
   const q = search.trim().toLowerCase();
@@ -375,7 +379,7 @@ export function GraphApp() {
   const totalH = rows.length * g.rowH + (data?.hasMore ? g.rowH * 2 : 0);
 
   return (
-    <div className={cx('graph-app', settings?.density === 'compact' && 'compact', g.spacious && 'spacious')}>
+    <div className={cx('graph-app', settings?.density === 'compact' && 'compact', g.spacious && 'spacious', absDates && 'abs-dates')}>
       <ProgressBar show={loading || !!busy} />
 
       <header className="toolbar">
@@ -436,7 +440,7 @@ export function GraphApp() {
 
         <IconButton icon="list-flat" title="View options" onClick={(e) => viewMenu(e.currentTarget as HTMLElement)} />
         <IconButton icon="repo-fetch" title="Fetch from all remotes" className="accent" spin={busy === 'Fetch'} onClick={() => act('fetch')} />
-        <IconButton icon="settings-gear" title="Settings" className={cx(showSettings && 'active')} onClick={() => setShowSettings(true)} />
+        <IconButton icon="settings-gear" title="Settings" className={cx(settingsTab && 'active')} onClick={() => setSettingsTab('appearance')} />
       </header>
 
       <div className="graph-main">
@@ -528,7 +532,7 @@ export function GraphApp() {
                       <>
                         <div className="col-hash mono">{c.hash.slice(0, 7)}</div>
                         <div className="col-date mono" {...dateHoverProps(c.date)}>
-                          {timeAgo(c.date)}
+                          {absDates ? compactDateTime(c.date, settings!.calendar) : timeAgo(c.date)}
                         </div>
                         <div className="col-avatar">
                           <Avatar name={c.author} email={c.email} size={g.spacious ? 30 : g.rowH > 30 ? 24 : 20} />
@@ -580,10 +584,11 @@ export function GraphApp() {
         </div>
       )}
       {menu.node}
-      {showSettings && (
+      {settingsTab && (
         <SettingsModal
+          initialTab={settingsTab}
           onClose={() => {
-            setShowSettings(false);
+            setSettingsTab(null);
             listRef.current?.focus();
           }}
         />

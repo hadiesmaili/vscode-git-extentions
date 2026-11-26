@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import type { Config, SettingKey } from '../../shared/protocol';
-import { CALENDARS, longDate } from '../lib/dates';
+import { CALENDARS, compactDateTime, longDate } from '../lib/dates';
+import type { SettingsTab } from '../lib/settingsBus';
 import { PALETTES } from '../lib/palette';
 import { act, call, onEvent } from '../lib/rpc';
 import { cx, timeAgo } from '../lib/util';
 import { Avatar, Icon, IconButton } from './ui';
 
-type Tab = 'appearance' | 'graph' | 'avatars' | 'blame' | 'features' | 'about';
+type Tab = SettingsTab;
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'appearance', label: 'Appearance', icon: 'symbol-color' },
@@ -19,8 +20,8 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
 
 const isMac = navigator.platform.toLowerCase().includes('mac');
 
-export function SettingsModal({ onClose }: { onClose: () => void }) {
-  const [tab, setTab] = useState<Tab>('appearance');
+export function SettingsModal({ onClose, initialTab = 'appearance' }: { onClose: () => void; initialTab?: Tab }) {
+  const [tab, setTab] = useState<Tab>(initialTab);
   const [cfg, setCfg] = useState<Config | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -107,6 +108,7 @@ function patchFor(key: SettingKey, value: unknown): Partial<Config> {
     'graph.pageSize': 'pageSize',
     'graph.palette': 'palette',
     calendar: 'calendar',
+    dateFormat: 'dateFormat',
     'avatars.gravatar': 'gravatar',
     'inlineBlame.enabled': 'blameEnabled',
     'inlineBlame.format': 'blameFormat',
@@ -285,6 +287,16 @@ function GraphTab({ cfg, set }: { cfg: Config; set: Set }) {
     <>
       <Row title="Calendar" desc={<span dir="auto">Today: {longDate(now, cfg.calendar)}</span>}>
         <Seg value={cfg.calendar} options={CALENDARS.map((c) => ({ id: c.id, label: c.native }))} onChange={(v) => set('calendar', v)} />
+      </Row>
+      <Row title="Date in commit list" desc={<>Example: <span className="mono" dir="auto">{cfg.dateFormat === 'absolute' ? compactDateTime(now - 3360, cfg.calendar) : '56m ago'}</span></>}>
+        <Seg
+          value={cfg.dateFormat}
+          options={[
+            { id: 'relative', label: 'Relative' },
+            { id: 'absolute', label: 'Date & time' },
+          ]}
+          onChange={(v) => set('dateFormat', v)}
+        />
       </Row>
       <Row title="Commits per page" desc="Loaded at once; more load while you scroll (50–5000).">
         <Field
