@@ -32,7 +32,9 @@ export function SidebarApp() {
   const taRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(
-    () => vscode.setState<Persisted>({ message, collapsed, amend, tree, collapsedDirs }),
+    () => {
+      vscode.setState<Persisted>({ message, collapsed, amend, tree, collapsedDirs });
+    },
     [message, collapsed, amend, tree, collapsedDirs],
   );
 
@@ -326,7 +328,7 @@ export function SidebarApp() {
             { icon: 'add', title: 'Stage', run: () => act('stage', { paths: [f.path] }) },
           ]}
           onOpen={(f) => act('openChange', { file: f, staged: false })}
-          emptyText={total === 0 ? 'No changes. Your working tree is clean.' : 'No unstaged changes.'}
+          emptyText={total === 0 ? 'Nothing changed. Your working tree is clean.' : 'Nothing here. All changes are staged.'}
         />
 
         <FileSection
@@ -345,7 +347,7 @@ export function SidebarApp() {
             { icon: 'remove', title: 'Unstage', run: () => act('unstage', { paths: [f.path] }) },
           ]}
           onOpen={(f) => act('openChange', { file: f, staged: true })}
-          hideWhenEmpty
+          emptyText="Nothing staged. Use + on a file to stage it."
         />
       </div>
 
@@ -463,10 +465,8 @@ function FileSection(props: {
   collapsedDirs: Record<string, boolean>;
   toggleDir: (key: string) => void;
   emptyText?: string;
-  hideWhenEmpty?: boolean;
 }) {
   const { files } = props;
-  if (props.hideWhenEmpty && files.length === 0) return null;
 
   const fileRow = (f: FileChange, depth: number) => {
     const key = `${props.id}:${f.path}`;

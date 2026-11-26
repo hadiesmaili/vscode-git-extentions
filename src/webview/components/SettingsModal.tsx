@@ -171,7 +171,9 @@ function Seg<T extends string>({ value, options, onChange }: { value: T; options
 /** Text/number input that commits on blur or Enter. */
 function Field({ value, onCommit, type = 'text', min, max, width }: { value: string | number; onCommit: (v: string) => void; type?: 'text' | 'number'; min?: number; max?: number; width?: number }) {
   const [v, setV] = useState(String(value));
-  useEffect(() => setV(String(value)), [value]);
+  useEffect(() => {
+    setV(String(value));
+  }, [value]);
   const commit = () => v !== String(value) && onCommit(v);
   return (
     <input

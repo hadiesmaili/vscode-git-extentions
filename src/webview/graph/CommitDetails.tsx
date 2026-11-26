@@ -36,7 +36,9 @@ export function CommitDetails({
     };
   }, [hash, hash === UNCOMMITTED ? version : 0]);
 
-  useEffect(() => setActiveFile(null), [hash]);
+  useEffect(() => {
+    setActiveFile(null);
+  }, [hash]);
 
   const d = detail && detail.hash === hash ? detail : null;
   const uncommitted = hash === UNCOMMITTED;

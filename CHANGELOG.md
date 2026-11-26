@@ -3,6 +3,14 @@
 All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.6.1] - 2026-11-26
+
+### Fixed
+- Collapsing **Changes** or **Staged Changes** crashed the sidebar with "Something went wrong: o is not a function". A React effect returned the value of VS Code's `setState`, and React then called that value as the effect's cleanup function. The VS Code API is now wrapped so `setState` never returns a value, and all effects use block bodies.
+
+### Changed
+- An empty **Staged Changes** section stays visible and says "Nothing staged" instead of disappearing.
+
 ## [0.6.0] - 2026-11-26
 
 ### Added
@@ -61,6 +69,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - Source Control sidebar: stage, discard, commit, amend and sync.
 - Inline blame on the current line.
 
+[0.6.1]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.3.1...v0.4.0

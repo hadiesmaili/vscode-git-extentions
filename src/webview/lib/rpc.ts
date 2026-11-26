@@ -8,7 +8,19 @@ interface VsCodeApi {
 
 declare function acquireVsCodeApi(): VsCodeApi;
 
-export const vscode = acquireVsCodeApi();
+const api = acquireVsCodeApi();
+
+/**
+ * VS Code's setState returns a value (not undefined). Wrapped so it can never
+ * leak into a React effect, where a returned value is called as cleanup.
+ */
+export const vscode = {
+  postMessage: (m: unknown): void => api.postMessage(m),
+  getState: <T>(): T | undefined => api.getState<T>(),
+  setState: <T>(s: T): void => {
+    api.setState(s);
+  },
+};
 
 let seq = 0;
 const pending = new Map<number, { resolve: (v: unknown) => void; reject: (e: Error) => void }>();
