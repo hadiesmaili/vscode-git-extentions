@@ -99,6 +99,8 @@ export function GraphApp() {
   const rows = data?.rows ?? [];
   const lanes = Math.min(data?.lanes ?? 1, MAX_LANES_SHOWN);
   const graphW = g.padX * 2 + lanes * g.laneW;
+  // Spacious: 3 badges + "+N" fill two wrapped lines of two.
+  const maxRefs = 3;
 
   // ---------- search ----------
   const q = search.trim().toLowerCase();
@@ -481,7 +483,7 @@ export function GraphApp() {
                       {g.spacious && row.refs.length === 0 && <span className="refs" />}
                       {row.refs.length > 0 && (
                         <span className="refs">
-                          {row.refs.slice(0, 3).map((r) => (
+                          {row.refs.slice(0, maxRefs).map((r) => (
                             <span
                               key={r.name}
                               onDoubleClick={(e) => {
@@ -499,9 +501,9 @@ export function GraphApp() {
                               />
                             </span>
                           ))}
-                          {row.refs.length > 3 && (
-                            <span className="ref more" title={row.refs.slice(3).map((r) => r.short).join('\n')}>
-                              +{row.refs.length - 3}
+                          {row.refs.length > maxRefs && (
+                            <span className="ref more" title={row.refs.slice(maxRefs).map((r) => r.short).join('\n')}>
+                              +{row.refs.length - maxRefs}
                             </span>
                           )}
                         </span>
@@ -512,9 +514,6 @@ export function GraphApp() {
                     </div>
                     {!row.uncommitted && (
                       <>
-                        <div className="col-author" title={c.email}>
-                          {c.author}
-                        </div>
                         <div className="col-hash mono">{c.hash.slice(0, 7)}</div>
                         <div className="col-date mono" {...dateHoverProps(c.date)}>
                           {timeAgo(c.date)}
