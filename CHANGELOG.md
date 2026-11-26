@@ -3,6 +3,18 @@
 All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.6.0] - 2026-11-26
+
+### Added
+- Sidebar tree view: toggle between a flat list and a folder tree. Single-child folders are compressed, folders collapse, and you can stage, unstage or discard a whole folder.
+
+### Changed
+- File rows under **Changes** and **Staged Changes** are indented, with a guide line, so they clearly belong to their section.
+- **Discard all** moved from the section header into a `…` menu.
+
+### Fixed
+- Clicking a section header could hit the hidden **Discard all** button and open a discard warning instead of collapsing the section. The header now only collapses.
+
 ## [0.5.0] - 2026-11-26
 
 ### Added
@@ -49,7 +61,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - Source Control sidebar: stage, discard, commit, amend and sync.
 - Inline blame on the current line.
 
-[0.5.0]: https://github.com/hadiesmaili/vscode-git-extentions/releases/tag/v0.5.0
+[0.6.0]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.5.0...v0.6.0
+[0.5.0]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/hadiesmaili/vscode-git-extentions/compare/v0.2.0...v0.3.0

@@ -48,7 +48,8 @@ Do your daily Git work without opening a terminal.
 
 - Switch and create branches. A sync strip shows how many commits are ahead (↑) and behind (↓).
 - A working tree card summarizes your changes.
-- Stage, unstage, discard and open files one at a time or all at once.
+- Stage, unstage, discard and open files one at a time, by folder, or all at once.
+- Show changes as a **flat list** or a **folder tree**.
 - Commit with <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>Enter</kbd>, or use *Commit & Push* and *Amend*.
 - During a merge, rebase or cherry-pick, a banner offers **Abort** and **Continue**.
 - Fetch, pull, push, publish and stash.

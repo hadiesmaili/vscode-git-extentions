@@ -9,6 +9,8 @@ interface Persisted {
   message: string;
   collapsed: Record<string, boolean>;
   amend: boolean;
+  tree?: boolean;
+  collapsedDirs?: Record<string, boolean>;
 }
 
 type Section = 'conflicts' | 'staged' | 'unstaged';
@@ -24,10 +26,15 @@ export function SidebarApp() {
   const [amend, setAmend] = useState(saved?.amend ?? false);
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>(saved?.collapsed ?? {});
   const [active, setActive] = useState<string | null>(null);
+  const [tree, setTree] = useState(saved?.tree ?? false);
+  const [collapsedDirs, setCollapsedDirs] = useState<Record<string, boolean>>(saved?.collapsedDirs ?? {});
   const menu = useMenu();
   const taRef = useRef<HTMLTextAreaElement>(null);
 
-  useEffect(() => vscode.setState<Persisted>({ message, collapsed, amend }), [message, collapsed, amend]);
+  useEffect(
+    () => vscode.setState<Persisted>({ message, collapsed, amend, tree, collapsedDirs }),
+    [message, collapsed, amend, tree, collapsedDirs],
+  );
 
   const load = useCallback(() => {
     call('getStatus')
@@ -158,6 +165,23 @@ export function SidebarApp() {
   ];
 
   const toggle = (k: Section) => setCollapsed((c) => ({ ...c, [k]: !c[k] }));
+  const toggleDir = (k: string) => setCollapsedDirs((c) => ({ ...c, [k]: !c[k] }));
+  const paths = (fs: FileChange[]) => fs.map((f) => f.path);
+
+  const dirMenu = (section: Section) => (e: React.MouseEvent, fs: FileChange[], dir: string) =>
+    menu.open(e, [
+      { header: `${dir}/ · ${fs.length} ${fs.length === 1 ? 'file' : 'files'}` },
+      section === 'staged'
+        ? { label: 'Unstage folder', icon: 'remove', run: () => act('unstage', { paths: paths(fs) }) }
+        : { label: 'Stage folder', icon: 'add', run: () => act('stage', { paths: paths(fs) }) },
+      ...(section === 'unstaged'
+        ? ([{ separator: true }, { label: 'Discard folder changes…', icon: 'discard', danger: true, run: () => act('discard', { files: fs }) }] as MenuEntry[])
+        : []),
+      { separator: true },
+      { label: 'Copy folder path', icon: 'copy', run: () => act('copy', { text: dir }) },
+    ]);
+
+  const common = { active, setActive, tree, collapsedDirs, toggleDir };
   const branchName = s.branch ?? (s.headHash ? s.headHash.slice(0, 7) : 'No commits');
 
   return (
@@ -172,6 +196,11 @@ export function SidebarApp() {
           <Icon name="chevron-down" className="chev" />
         </button>
         <div className="grow" />
+        <IconButton
+          icon={tree ? 'list-flat' : 'list-tree'}
+          title={tree ? 'View as list' : 'View as tree'}
+          onClick={() => setTree((t) => !t)}
+        />
         <IconButton icon="refresh" title="Refresh" onClick={load} spin={busy === 'Fetch'} />
         <IconButton icon="add" title="New branch" onClick={() => act('createBranch', {})} />
         <IconButton icon="ellipsis" title="More actions" onClick={(e) => moreMenu(e.currentTarget as HTMLElement)} />
@@ -256,8 +285,9 @@ export function SidebarApp() {
             files={s.conflicts}
             collapsed={!!collapsed.conflicts}
             onToggle={() => toggle('conflicts')}
-            active={active}
-            setActive={setActive}
+            {...common}
+            dirActions={(fs) => [{ icon: 'add', title: 'Mark folder resolved', run: () => act('stage', { paths: paths(fs) }) }]}
+            dirMenu={dirMenu('conflicts')}
             menu={(e, f) => menu.open(e, fileMenu(f, 'conflicts'))}
             actions={[{ icon: 'add', title: 'Stage all (mark resolved)', run: () => act('stage', { paths: s.conflicts.map((f) => f.path) }) }]}
             rowActions={(f) => [
@@ -274,13 +304,22 @@ export function SidebarApp() {
           files={s.unstaged}
           collapsed={!!collapsed.unstaged}
           onToggle={() => toggle('unstaged')}
-          active={active}
-          setActive={setActive}
+          {...common}
           menu={(e, f) => menu.open(e, fileMenu(f, 'unstaged'))}
-          actions={[
-            { icon: 'discard', title: 'Discard all changes', run: () => act('discard', { files: s.unstaged }) },
-            { icon: 'add', title: 'Stage all changes', run: () => act('stage', { paths: s.unstaged.map((f) => f.path) }) },
-          ]}
+          actions={[{ icon: 'add', title: 'Stage all changes', run: () => act('stage', { paths: paths(s.unstaged) }) }]}
+          more={(el) =>
+            menu.openAt(
+              el,
+              [
+                { label: 'Stage all changes', icon: 'add', run: () => act('stage', { paths: paths(s.unstaged) }) },
+                { separator: true },
+                { label: 'Discard all changes…', icon: 'discard', danger: true, run: () => act('discard', { files: s.unstaged }) },
+              ],
+              'right',
+            )
+          }
+          dirActions={(fs) => [{ icon: 'add', title: 'Stage folder', run: () => act('stage', { paths: paths(fs) }) }]}
+          dirMenu={dirMenu('unstaged')}
           rowActions={(f) => [
             { icon: 'go-to-file', title: 'Open file', run: () => act('openFile', { path: f.path }), hide: f.status === 'D' },
             { icon: 'discard', title: 'Discard changes', run: () => act('discard', { files: [f] }) },
@@ -296,8 +335,9 @@ export function SidebarApp() {
           files={s.staged}
           collapsed={!!collapsed.staged}
           onToggle={() => toggle('staged')}
-          active={active}
-          setActive={setActive}
+          {...common}
+          dirActions={(fs) => [{ icon: 'remove', title: 'Unstage folder', run: () => act('unstage', { paths: paths(fs) }) }]}
+          dirMenu={dirMenu('staged')}
           menu={(e, f) => menu.open(e, fileMenu(f, 'staged'))}
           actions={[{ icon: 'remove', title: 'Unstage all', run: () => act('unstage', { paths: s.staged.map((f) => f.path) }) }]}
           rowActions={(f) => [
@@ -360,6 +400,48 @@ interface RowAction {
   hide?: boolean;
 }
 
+interface DirNode {
+  /** Display name; single-child folder chains are compressed ("src/lib"). */
+  name: string;
+  path: string;
+  dirs: DirNode[];
+  files: FileChange[];
+}
+
+/** Builds a folder tree from file paths, compressing single-child folder chains like VS Code. */
+function buildTree(files: FileChange[]): DirNode {
+  type Raw = { dirs: Map<string, Raw>; files: FileChange[] };
+  const root: Raw = { dirs: new Map(), files: [] };
+  for (const f of files) {
+    const parts = f.path.split('/');
+    let n = root;
+    for (const part of parts.slice(0, -1)) {
+      let next = n.dirs.get(part);
+      if (!next) n.dirs.set(part, (next = { dirs: new Map(), files: [] }));
+      n = next;
+    }
+    n.files.push(f);
+  }
+  const convert = (name: string, path: string, r: Raw): DirNode => {
+    while (r.dirs.size === 1 && r.files.length === 0 && name) {
+      const [childName, child] = [...r.dirs][0];
+      name = `${name}/${childName}`;
+      path = `${path}/${childName}`;
+      r = child;
+    }
+    const dirs = [...r.dirs]
+      .sort(([x], [y]) => x.localeCompare(y))
+      .map(([n, c]) => convert(n, path ? `${path}/${n}` : n, c));
+    const fs = [...r.files].sort((x, y) => x.path.localeCompare(y.path));
+    return { name, path, dirs, files: fs };
+  };
+  return convert('', '', root);
+}
+
+function allFiles(d: DirNode): FileChange[] {
+  return [...d.files, ...d.dirs.flatMap(allFiles)];
+}
+
 function FileSection(props: {
   id: Section;
   title: string;
@@ -369,81 +451,124 @@ function FileSection(props: {
   active: string | null;
   setActive: (k: string) => void;
   menu: (e: React.MouseEvent, f: FileChange) => void;
+  /** Safe one-click actions shown on the header. */
   actions: RowAction[];
+  /** Further actions (including destructive ones) behind a "…" button. */
+  more?: (el: HTMLElement) => void;
   rowActions: (f: FileChange) => RowAction[];
+  dirActions: (files: FileChange[]) => RowAction[];
+  dirMenu: (e: React.MouseEvent, files: FileChange[], path: string) => void;
   onOpen: (f: FileChange) => void;
+  tree: boolean;
+  collapsedDirs: Record<string, boolean>;
+  toggleDir: (key: string) => void;
   emptyText?: string;
   hideWhenEmpty?: boolean;
 }) {
   const { files } = props;
   if (props.hideWhenEmpty && files.length === 0) return null;
+
+  const fileRow = (f: FileChange, depth: number) => {
+    const key = `${props.id}:${f.path}`;
+    const { dir, name } = splitPath(f.path);
+    const fi = fileIcon(f.path);
+    return (
+      <li
+        key={key}
+        className={cx('file', props.active === key && 'active', f.status === 'D' && 'deleted')}
+        style={{ ['--depth' as string]: depth }}
+        tabIndex={0}
+        title={f.oldPath ? `${f.oldPath} → ${f.path}` : f.path}
+        onClick={() => {
+          props.setActive(key);
+          props.onOpen(f);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            props.setActive(key);
+            props.onOpen(f);
+          }
+        }}
+        onContextMenu={(e) => {
+          props.setActive(key);
+          props.menu(e, f);
+        }}
+      >
+        <Icon name={fi.icon} className={`tone-${fi.tone}`} />
+        <span className="fname">{name}</span>
+        {!props.tree && <span className="fdir">{dir}</span>}
+        <span className="grow" />
+        <span className="row-actions">
+          {props
+            .rowActions(f)
+            .filter((a) => !a.hide)
+            .map((a) => (
+              <IconButton key={a.icon} icon={a.icon} title={a.title} className="sm" onClick={a.run} />
+            ))}
+        </span>
+        <span className={cx('status-letter', `st-${f.status}`)} title={statusName(f.status)}>
+          {f.status === '?' ? 'U' : f.status}
+        </span>
+      </li>
+    );
+  };
+
+  const dirRows = (d: DirNode, depth: number): React.ReactNode[] => {
+    const out: React.ReactNode[] = [];
+    for (const sub of d.dirs) {
+      const key = `${props.id}:${sub.path}`;
+      const closed = !!props.collapsedDirs[key];
+      const under = allFiles(sub);
+      out.push(
+        <li
+          key={`d:${key}`}
+          className="file dir"
+          style={{ ['--depth' as string]: depth }}
+          tabIndex={0}
+          title={sub.path}
+          aria-expanded={!closed}
+          onClick={() => props.toggleDir(key)}
+          onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), props.toggleDir(key))}
+          onContextMenu={(e) => props.dirMenu(e, under, sub.path)}
+        >
+          <Icon name={closed ? 'chevron-right' : 'chevron-down'} className="dir-chev" />
+          <Icon name={closed ? 'folder' : 'folder-opened'} className="dir-icon" />
+          <span className="fname">{sub.name}</span>
+          <span className="grow" />
+          <span className="row-actions">
+            {props.dirActions(under).map((a) => (
+              <IconButton key={a.icon} icon={a.icon} title={a.title} className="sm" onClick={a.run} />
+            ))}
+          </span>
+          <span className="dir-count">{under.length}</span>
+        </li>,
+      );
+      if (!closed) out.push(...dirRows(sub, depth + 1));
+    }
+    for (const f of d.files) out.push(fileRow(f, depth));
+    return out;
+  };
+
   return (
     <section className={cx('section', props.id)}>
-      <div
-        className="section-head"
-        role="button"
-        tabIndex={0}
-        aria-expanded={!props.collapsed}
-        onClick={props.onToggle}
-        onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), props.onToggle())}
-      >
-        <Icon name={props.collapsed ? 'chevron-right' : 'chevron-down'} className="chev" />
-        <span className="section-title">{props.title}</span>
-        <div className="grow" />
+      <div className="section-head">
+        <button className="section-toggle" aria-expanded={!props.collapsed} onClick={props.onToggle}>
+          <Icon name={props.collapsed ? 'chevron-right' : 'chevron-down'} className="chev" />
+          <span className="section-title">{props.title}</span>
+        </button>
         {files.length > 0 && (
           <span className="section-actions">
             {props.actions.map((a) => (
               <IconButton key={a.icon} icon={a.icon} title={a.title} className="sm" onClick={a.run} />
             ))}
+            {props.more && <IconButton icon="ellipsis" title="More actions" className="sm" onClick={(e) => props.more!(e.currentTarget as HTMLElement)} />}
           </span>
         )}
         <span className="count">{files.length}</span>
       </div>
       {!props.collapsed && (
-        <ul className="files" role="list">
-          {files.map((f) => {
-            const key = `${props.id}:${f.path}`;
-            const { dir, name } = splitPath(f.path);
-            const fi = fileIcon(f.path);
-            return (
-              <li
-                key={key}
-                className={cx('file', props.active === key && 'active', f.status === 'D' && 'deleted')}
-                tabIndex={0}
-                title={f.oldPath ? `${f.oldPath} → ${f.path}` : f.path}
-                onClick={() => {
-                  props.setActive(key);
-                  props.onOpen(f);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    props.setActive(key);
-                    props.onOpen(f);
-                  }
-                }}
-                onContextMenu={(e) => {
-                  props.setActive(key);
-                  props.menu(e, f);
-                }}
-              >
-                <Icon name={fi.icon} className={`tone-${fi.tone}`} />
-                <span className="fname">{name}</span>
-                <span className="fdir">{dir}</span>
-                <span className="grow" />
-                <span className="row-actions">
-                  {props
-                    .rowActions(f)
-                    .filter((a) => !a.hide)
-                    .map((a) => (
-                      <IconButton key={a.icon} icon={a.icon} title={a.title} className="sm" onClick={a.run} />
-                    ))}
-                </span>
-                <span className={cx('status-letter', `st-${f.status}`)} title={statusName(f.status)}>
-                  {f.status === '?' ? 'U' : f.status}
-                </span>
-              </li>
-            );
-          })}
+        <ul className={cx('files', props.tree && 'tree')} role="list">
+          {props.tree ? dirRows(buildTree(files), 0) : files.map((f) => fileRow(f, 0))}
           {files.length === 0 && props.emptyText && <li className="files-empty">{props.emptyText}</li>}
         </ul>
       )}
