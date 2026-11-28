@@ -3,7 +3,7 @@ import type { FileChange, StatusInfo } from '../../shared/protocol';
 import { Empty, Icon, IconButton, ProgressBar, useMenu, type MenuEntry } from '../components/ui';
 import { act, call, onEvent, vscode } from '../lib/rpc';
 import { applyTheme } from '../lib/theme';
-import { cx, fileIcon, splitPath } from '../lib/util';
+import { allFiles, buildTree, cx, fileIcon, splitPath, type DirNode } from '../lib/util';
 
 interface Persisted {
   message: string;
@@ -400,48 +400,6 @@ interface RowAction {
   title: string;
   run: () => void;
   hide?: boolean;
-}
-
-interface DirNode {
-  /** Display name; single-child folder chains are compressed ("src/lib"). */
-  name: string;
-  path: string;
-  dirs: DirNode[];
-  files: FileChange[];
-}
-
-/** Builds a folder tree from file paths, compressing single-child folder chains like VS Code. */
-function buildTree(files: FileChange[]): DirNode {
-  type Raw = { dirs: Map<string, Raw>; files: FileChange[] };
-  const root: Raw = { dirs: new Map(), files: [] };
-  for (const f of files) {
-    const parts = f.path.split('/');
-    let n = root;
-    for (const part of parts.slice(0, -1)) {
-      let next = n.dirs.get(part);
-      if (!next) n.dirs.set(part, (next = { dirs: new Map(), files: [] }));
-      n = next;
-    }
-    n.files.push(f);
-  }
-  const convert = (name: string, path: string, r: Raw): DirNode => {
-    while (r.dirs.size === 1 && r.files.length === 0 && name) {
-      const [childName, child] = [...r.dirs][0];
-      name = `${name}/${childName}`;
-      path = `${path}/${childName}`;
-      r = child;
-    }
-    const dirs = [...r.dirs]
-      .sort(([x], [y]) => x.localeCompare(y))
-      .map(([n, c]) => convert(n, path ? `${path}/${n}` : n, c));
-    const fs = [...r.files].sort((x, y) => x.path.localeCompare(y.path));
-    return { name, path, dirs, files: fs };
-  };
-  return convert('', '', root);
-}
-
-function allFiles(d: DirNode): FileChange[] {
-  return [...d.files, ...d.dirs.flatMap(allFiles)];
 }
 
 function FileSection(props: {

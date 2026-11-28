@@ -1,3 +1,4 @@
+import type { FileChange } from '../../shared/protocol';
 export function timeAgo(unix: number, short = true): string {
   const s = Math.max(0, Date.now() / 1000 - unix);
   const units: [number, string, string][] = [
@@ -74,4 +75,46 @@ const KIND_COLORS: Record<string, string> = {
 export function fileIcon(p: string): { icon: string; tone: string } {
   const ext = p.slice(p.lastIndexOf('.') + 1).toLowerCase();
   return { icon: ICONS[ext] ?? 'file', tone: KIND_COLORS[ext] ?? 'muted' };
+}
+
+export interface DirNode {
+  /** Display name; single-child folder chains are compressed ("src/lib"). */
+  name: string;
+  path: string;
+  dirs: DirNode[];
+  files: FileChange[];
+}
+
+/** Builds a folder tree from file paths, compressing single-child folder chains like VS Code. */
+export function buildTree(files: FileChange[]): DirNode {
+  type Raw = { dirs: Map<string, Raw>; files: FileChange[] };
+  const root: Raw = { dirs: new Map(), files: [] };
+  for (const f of files) {
+    const parts = f.path.split('/');
+    let n = root;
+    for (const part of parts.slice(0, -1)) {
+      let next = n.dirs.get(part);
+      if (!next) n.dirs.set(part, (next = { dirs: new Map(), files: [] }));
+      n = next;
+    }
+    n.files.push(f);
+  }
+  const convert = (name: string, path: string, r: Raw): DirNode => {
+    while (r.dirs.size === 1 && r.files.length === 0 && name) {
+      const [childName, child] = [...r.dirs][0];
+      name = `${name}/${childName}`;
+      path = `${path}/${childName}`;
+      r = child;
+    }
+    const dirs = [...r.dirs]
+      .sort(([x], [y]) => x.localeCompare(y))
+      .map(([n, c]) => convert(n, path ? `${path}/${n}` : n, c));
+    const fs = [...r.files].sort((x, y) => x.path.localeCompare(y.path));
+    return { name, path, dirs, files: fs };
+  };
+  return convert('', '', root);
+}
+
+export function allFiles(d: DirNode): FileChange[] {
+  return [...d.files, ...d.dirs.flatMap(allFiles)];
 }

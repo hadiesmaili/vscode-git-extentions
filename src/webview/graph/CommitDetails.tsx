@@ -2,10 +2,19 @@ import { useEffect, useState } from 'react';
 import type { CommitDetail, FileChange } from '../../shared/protocol';
 import { Avatar, Icon, IconButton, RefBadge } from '../components/ui';
 import { act, call } from '../lib/rpc';
-import { cx, fileIcon, splitPath, timeAgo } from '../lib/util';
+import { allFiles, buildTree, cx, fileIcon, splitPath, timeAgo, type DirNode } from '../lib/util';
 import { dateHoverProps } from '../components/DateCard';
 
 const UNCOMMITTED = '*';
+const TREE_KEY = 'gitGraph.detailsTree';
+
+function loadTree(): boolean {
+  try {
+    return localStorage.getItem(TREE_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
 
 export function CommitDetails({
   hash,
@@ -24,6 +33,19 @@ export function CommitDetails({
   const [detail, setDetail] = useState<CommitDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [activeFile, setActiveFile] = useState<string | null>(null);
+  const [tree, setTree] = useState(loadTree);
+  const [collapsedDirs, setCollapsedDirs] = useState<Record<string, boolean>>({});
+
+  const toggleTree = () =>
+    setTree((t) => {
+      try {
+        localStorage.setItem(TREE_KEY, t ? '0' : '1');
+      } catch {
+        /* storage unavailable */
+      }
+      return !t;
+    });
+  const toggleDir = (path: string) => setCollapsedDirs((c) => ({ ...c, [path]: !c[path] }));
 
   useEffect(() => {
     let live = true;
@@ -38,6 +60,7 @@ export function CommitDetails({
 
   useEffect(() => {
     setActiveFile(null);
+    setCollapsedDirs({});
   }, [hash]);
 
   const d = detail && detail.hash === hash ? detail : null;
@@ -46,6 +69,55 @@ export function CommitDetails({
   const openFile = (f: FileChange) => {
     setActiveFile(f.path);
     act('openCommitFile', { hash, parent: d?.parents[0], file: f });
+  };
+
+  const fileRow = (f: FileChange, depth: number) => {
+    const { dir, name } = splitPath(f.path);
+    const fi = fileIcon(f.path);
+    return (
+      <li key={f.path} style={{ ['--depth' as string]: depth }}>
+        <button
+          className={cx('file-row', activeFile === f.path && 'active')}
+          onClick={() => openFile(f)}
+          title={f.oldPath ? `${f.oldPath} → ${f.path}` : f.path}
+        >
+          <Icon name={fi.icon} className={`tone-${fi.tone}`} />
+          <span className="file-name">{name}</span>
+          {(!tree || f.oldPath) && <span className="file-dir">{f.oldPath ? `${f.oldPath} →` : dir}</span>}
+          <span className="grow" />
+          {f.binary ? (
+            <span className="file-bin">bin</span>
+          ) : (
+            <span className="file-stats">
+              {!!f.additions && <span className="add">+{f.additions}</span>}
+              {!!f.deletions && <span className="del">−{f.deletions}</span>}
+            </span>
+          )}
+          <span className={cx('status-letter', `st-${f.status}`)}>{f.status}</span>
+        </button>
+      </li>
+    );
+  };
+
+  const dirRows = (node: DirNode, depth: number): React.ReactNode[] => {
+    const out: React.ReactNode[] = [];
+    for (const sub of node.dirs) {
+      const closed = !!collapsedDirs[sub.path];
+      out.push(
+        <li key={`d:${sub.path}`} style={{ ['--depth' as string]: depth }}>
+          <button className="file-row dir-row" aria-expanded={!closed} title={sub.path} onClick={() => toggleDir(sub.path)}>
+            <Icon name={closed ? 'chevron-right' : 'chevron-down'} className="dir-chev" />
+            <Icon name={closed ? 'folder' : 'folder-opened'} className="dir-icon" />
+            <span className="file-name">{sub.name}</span>
+            <span className="grow" />
+            <span className="dir-count">{allFiles(sub).length}</span>
+          </button>
+        </li>,
+      );
+      if (!closed) out.push(...dirRows(sub, depth + 1));
+    }
+    for (const f of node.files) out.push(fileRow(f, depth));
+    return out;
   };
 
   return (
@@ -131,35 +203,15 @@ export function CommitDetails({
               <div className="grow" />
               <span className="stat-add">+{d.additions}</span>
               <span className="stat-del">−{d.deletions}</span>
+              <IconButton
+                icon={tree ? 'list-flat' : 'list-tree'}
+                title={tree ? 'View as list' : 'View as tree'}
+                className="sm"
+                onClick={toggleTree}
+              />
             </div>
-            <ul className="files-list" role="list">
-              {d.files.map((f) => {
-                const { dir, name } = splitPath(f.path);
-                const fi = fileIcon(f.path);
-                return (
-                  <li key={f.path}>
-                    <button
-                      className={cx('file-row', activeFile === f.path && 'active')}
-                      onClick={() => openFile(f)}
-                      title={f.oldPath ? `${f.oldPath} → ${f.path}` : f.path}
-                    >
-                      <Icon name={fi.icon} className={`tone-${fi.tone}`} />
-                      <span className="file-name">{name}</span>
-                      <span className="file-dir">{f.oldPath ? `${f.oldPath} →` : dir}</span>
-                      <span className="grow" />
-                      {f.binary ? (
-                        <span className="file-bin">bin</span>
-                      ) : (
-                        <span className="file-stats">
-                          {!!f.additions && <span className="add">+{f.additions}</span>}
-                          {!!f.deletions && <span className="del">−{f.deletions}</span>}
-                        </span>
-                      )}
-                      <span className={cx('status-letter', `st-${f.status}`)}>{f.status}</span>
-                    </button>
-                  </li>
-                );
-              })}
+            <ul className={cx('files-list', tree && 'tree')} role="list">
+              {tree ? dirRows(buildTree(d.files), 0) : d.files.map((f) => fileRow(f, 0))}
               {d.files.length === 0 && <li className="muted files-empty">No file changes (empty or merge commit).</li>}
             </ul>
           </div>

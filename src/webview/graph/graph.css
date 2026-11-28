@@ -768,3 +768,30 @@ body[data-theme='light'] .graph-app {
     grid-template-columns: var(--graph-w) minmax(0, 1fr) 0 112px 28px;
   }
 }
+
+/* Tree view of changed files */
+.files-list.tree .file-row {
+  padding-left: calc(8px + var(--depth, 0) * 14px);
+}
+.files-list.tree li:not(:has(.dir-row)) .file-row {
+  padding-left: calc(8px + var(--depth, 0) * 14px + 18px);
+}
+.dir-row .dir-chev {
+  font-size: 12px;
+  color: var(--text-faint);
+  margin-right: -4px;
+}
+.dir-row .dir-icon {
+  color: var(--accent-text);
+  opacity: 0.85;
+}
+.dir-row .file-name {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.dir-row .dir-count {
+  font-family: var(--num-font);
+  font-variant-numeric: tabular-nums;
+  font-size: 10.5px;
+  color: var(--text-faint);
+}
