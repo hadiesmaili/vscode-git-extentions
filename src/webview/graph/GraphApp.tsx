@@ -502,9 +502,14 @@ export function GraphApp() {
                   >
                     <div className="col-graph" />
                     <div className="col-subject">
-                      {g.spacious && row.refs.length === 0 && <span className="refs" />}
-                      {row.refs.length > 0 && (
+                      {g.spacious && row.refs.length === 0 && !row.isHead && <span className="refs" />}
+                      {(row.refs.length > 0 || row.isHead) && (
                         <span className="refs">
+                          {row.isHead && (
+                            <span className="ref head-badge" title="Current HEAD">
+                              <span>HEAD</span>
+                            </span>
+                          )}
                           {row.refs.slice(0, maxRefs).map((r) => (
                             <span
                               key={r.name}

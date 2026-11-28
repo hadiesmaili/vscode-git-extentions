@@ -2,7 +2,7 @@
   "name": "git-workspace-graph",
   "displayName": "Git Workspace Graph",
   "description": "Modern Git graph, source control and inline blame for VS Code.",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "publisher": "HadiEsmaeili",
   "license": "MIT",
   "author": {
@@ -257,7 +257,8 @@
     "typecheck": "tsc --noEmit -p .",
     "test": "vitest run",
     "package": "node esbuild.mjs --production && vsce package --no-dependencies",
-    "release": "bash scripts/release.sh"
+    "release": "bash scripts/release.sh",
+    "vsix": "bash scripts/build-vsix.sh"
   },
   "dependencies": {},
   "devDependencies": {

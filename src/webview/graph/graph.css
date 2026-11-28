@@ -246,6 +246,23 @@ body[data-theme='light'] .graph-app {
 .row.head .subject {
   font-weight: 600;
 }
+.row.head:not(.selected) {
+  background: color-mix(in srgb, var(--c) 9%, transparent);
+}
+.row.head:not(.selected):hover {
+  background: color-mix(in srgb, var(--c) 14%, transparent);
+}
+.ref.head-badge {
+  flex: none;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--bg);
+  background: var(--c);
+  border-color: var(--c);
+}
+body.vscode-light[data-theme='auto'] .ref.head-badge {
+  color: white;
+}
 .subject.italic {
   font-style: italic;
   color: var(--text-muted);
@@ -673,6 +690,9 @@ body[data-theme='light'] .graph-app {
 .spacious .row.head::after {
   background: linear-gradient(90deg, color-mix(in srgb, var(--c) 14%, transparent), color-mix(in srgb, var(--c) 4%, transparent) 70%);
   border: 1px solid color-mix(in srgb, var(--c) 22%, transparent);
+}
+.spacious .row.head:not(.selected) {
+  background: transparent;
 }
 .spacious .row.selected {
   background: transparent;
