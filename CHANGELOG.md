@@ -3,6 +3,16 @@
 All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.8.0] - 2026-11-28
+
+### Added
+- Commit details: list/tree toggle for changed files. Tree view folders collapse on click.
+- Inline blame settings: text color (theme default, presets or custom) and intensity slider.
+- `scripts/release.sh` (`pnpm release`) to bump, package, tag and publish.
+
+### Changed
+- Shared folder-tree builder between Source Control sidebar and commit details.
+
 ## [0.7.7] - 2026-11-28
 
 ### Changed

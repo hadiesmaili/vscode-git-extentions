@@ -59,7 +59,7 @@ TODAY=$(date +%F)
 echo "Version: $CUR -> $NEW"
 
 if [ -z "${VSCE_PAT:-}" ] && [ "$DRY" = 0 ]; then
-  pnpm dlx @vscode/vsce verify-pat HadiEsmaeili >/dev/null 2>&1 \
+  pnpm dlx @vscode/vsce ls-publishers 2>/dev/null | grep -qx HadiEsmaeili \
     || die "No Marketplace login. Set VSCE_PAT or run: pnpm dlx @vscode/vsce login HadiEsmaeili"
 fi
 
