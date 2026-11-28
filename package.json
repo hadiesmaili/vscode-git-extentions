@@ -256,7 +256,8 @@
     "watch": "node esbuild.mjs --watch",
     "typecheck": "tsc --noEmit -p .",
     "test": "vitest run",
-    "package": "node esbuild.mjs --production && vsce package --no-dependencies"
+    "package": "node esbuild.mjs --production && vsce package --no-dependencies",
+    "release": "bash scripts/release.sh"
   },
   "dependencies": {},
   "devDependencies": {
