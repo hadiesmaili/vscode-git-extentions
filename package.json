@@ -2,7 +2,7 @@
   "name": "git-workspace",
   "displayName": "Git Workspace",
   "description": "Modern Git graph, source control and inline blame for VS Code.",
-  "version": "0.7.4",
+  "version": "0.7.5",
   "publisher": "git-workspace",
   "license": "MIT",
   "author": {
@@ -112,6 +112,13 @@
           "command": "gitWorkspace.refresh",
           "when": "view == gitWorkspace.sidebar",
           "group": "navigation"
+        }
+      ],
+      "scm/title": [
+        {
+          "command": "gitWorkspace.openGraph",
+          "when": "scmProvider == git",
+          "group": "navigation@-1"
         }
       ],
       "commandPalette": [

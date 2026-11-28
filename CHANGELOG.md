@@ -3,6 +3,16 @@
 All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.7.5] - 2026-11-28
+
+### Added
+- Source Control view: Git Graph button in the title bar, next to the commit input.
+
+### Changed
+- Calendar options use formal names: Gregorian, Solar Hijri, Lunar Hijri. Gregorian stays the default.
+- Sidebar branch button: the chevron points right, toward the branch picker.
+- Sidebar header shows only "Git Workspace".
+
 ## [0.7.4] - 2026-11-26
 
 ### Added
