@@ -124,7 +124,7 @@ export class Controller implements HostImpl {
   }
 
   async openSettings(): Promise<void> {
-    await vscode.commands.executeCommand('workbench.action.openSettings', '@ext:git-workspace.git-workspace');
+    await vscode.commands.executeCommand('workbench.action.openSettings', '@ext:HadiEsmaeili.git-workspace-graph');
   }
 
   lastCommitMessage(): Promise<string> {

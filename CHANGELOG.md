@@ -3,6 +3,15 @@
 All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.7.7] - 2026-11-28
+
+### Changed
+- First release on the Visual Studio Marketplace under publisher `HadiEsmaeili`.
+- Extension renamed to `git-workspace-graph` (display name "Git Workspace Graph"), because `git-workspace` and "Git Workspace" are taken on the Marketplace. Extension ID is now `HadiEsmaeili.git-workspace-graph`.
+
+### Fixed
+- "Open Settings" filters by the correct extension ID.
+
 ## [0.7.6] - 2026-11-28
 
 ### Changed

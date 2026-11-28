@@ -78,11 +78,11 @@ The current line shows a faint note with the author, the time and the commit sum
 
 ## Install
 
-1. Download the latest `git-workspace-x.y.z.vsix` from [**Releases**](https://github.com/hadiesmaili/vscode-git-extentions/releases/latest).
+1. Download the latest `git-workspace-graph-x.y.z.vsix` from [**Releases**](https://github.com/hadiesmaili/vscode-git-extentions/releases/latest).
 2. Install it:
 
    ```bash
-   code --install-extension git-workspace-x.y.z.vsix
+   code --install-extension git-workspace-graph-x.y.z.vsix
    ```
 
    Or, in VS Code, open **Extensions** → `···` → **Install from VSIX…**
