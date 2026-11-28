@@ -195,7 +195,7 @@ export function SidebarApp() {
         <button className="branch-pill" onClick={() => act('pickBranch')} title="Switch branch">
           <Icon name={s.detached ? 'debug-disconnect' : 'git-branch'} />
           <span className="branch-name">{branchName}</span>
-          <Icon name="chevron-down" className="chev" />
+          <Icon name="chevron-right" className="chev" />
         </button>
         <div className="grow" />
         <IconButton

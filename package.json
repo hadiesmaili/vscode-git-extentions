@@ -53,7 +53,7 @@
         {
           "type": "webview",
           "id": "gitWorkspace.sidebar",
-          "name": "Git"
+          "name": "Git Workspace"
         }
       ]
     },
@@ -188,9 +188,9 @@
             "islamic-umalqura"
           ],
           "enumDescriptions": [
-            "Gregorian (میلادی)",
-            "Solar Hijri (شمسی)",
-            "Lunar Hijri, Umm al-Qura (قمری)"
+            "Gregorian",
+            "Solar Hijri",
+            "Lunar Hijri (Umm al-Qura)"
           ],
           "default": "gregory",
           "description": "Calendar used for full dates in the Git Graph."

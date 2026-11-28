@@ -1,10 +1,11 @@
 import { useSyncExternalStore } from 'react';
 import type { Calendar } from '../../shared/protocol';
 
-export const CALENDARS: { id: Calendar; label: string; native: string; locale: string }[] = [
-  { id: 'gregory', label: 'Gregorian', native: 'Miladi', locale: 'en-US' },
-  { id: 'persian', label: 'Solar Hijri', native: 'Shamsi', locale: 'fa-IR' },
-  { id: 'islamic-umalqura', label: 'Lunar Hijri', native: 'Ghamari', locale: 'fa-IR' },
+/** First entry is the default calendar. */
+export const CALENDARS: { id: Calendar; label: string; locale: string }[] = [
+  { id: 'gregory', label: 'Gregorian', locale: 'en-US' },
+  { id: 'persian', label: 'Solar Hijri', locale: 'fa-IR' },
+  { id: 'islamic-umalqura', label: 'Lunar Hijri', locale: 'fa-IR' },
 ];
 
 let current: Calendar = 'gregory';

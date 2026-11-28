@@ -290,7 +290,7 @@ function GraphTab({ cfg, set }: { cfg: Config; set: Set }) {
   return (
     <>
       <Row title="Calendar" desc={<span dir="auto">Today: {longDate(now, cfg.calendar)}</span>}>
-        <Seg value={cfg.calendar} options={CALENDARS.map((c) => ({ id: c.id, label: c.native }))} onChange={(v) => set('calendar', v)} />
+        <Seg value={cfg.calendar} options={CALENDARS.map((c) => ({ id: c.id, label: c.label }))} onChange={(v) => set('calendar', v)} />
       </Row>
       <Row title="Date in commit list" desc={<>Example: <span className="mono" dir="auto">{cfg.dateFormat === 'absolute' ? compactDateTime(now - 3360, cfg.calendar) : '56m ago'}</span></>}>
         <Seg
@@ -394,7 +394,7 @@ function Features({ cfg, set }: { cfg: Config; set: Set }) {
     { icon: 'source-control', title: 'Source Control sidebar', desc: 'Stage, discard, commit, amend, sync and switch branches.' },
     { icon: 'eye', title: 'Inline blame', desc: 'Author and commit at the end of the current line, with a hover.', toggle: { on: cfg.blameEnabled, key: 'inlineBlame.enabled' as const } },
     { icon: 'account', title: 'Author cards', desc: 'Hover an avatar: commits, first/last activity, custom avatar.' },
-    { icon: 'calendar', title: 'Date cards', desc: 'Hover a date: full time, time zone, Gregorian / Shamsi / Qamari.' },
+    { icon: 'calendar', title: 'Date cards', desc: 'Hover a date: full time, time zone, Gregorian, Solar Hijri or Lunar Hijri calendar.' },
     { icon: 'shield', title: 'Safe operations', desc: 'Reset hard, discard, delete and rebase always ask first.' },
   ];
   return (
