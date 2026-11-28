@@ -298,6 +298,21 @@ button {
   opacity: 0.4;
   cursor: default;
 }
+/* repo-fetch glyph's axis sits at x=8.5 of its 16px box; shift it back to center */
+.icon-btn .codicon-repo-fetch {
+  transform: translateX(-0.5px);
+}
+.icon-btn .codicon-repo-fetch.spin {
+  animation: spin-repo-fetch 1s linear infinite;
+}
+@keyframes spin-repo-fetch {
+  from {
+    transform: translateX(-0.5px) rotate(0deg);
+  }
+  to {
+    transform: translateX(-0.5px) rotate(360deg);
+  }
+}
 .icon-btn.sm {
   width: 22px;
   height: 22px;
