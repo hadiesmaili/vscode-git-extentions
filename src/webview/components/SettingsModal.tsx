@@ -48,10 +48,15 @@ export function SettingsModal({ onClose, initialTab = 'appearance' }: { onClose:
     return () => window.removeEventListener('keydown', key, true);
   }, [onClose]);
 
+  const timers = useRef<Partial<Record<SettingKey, ReturnType<typeof setTimeout>>>>({});
   const set = (key: SettingKey, value: unknown) => {
     // Optimistic: reflect immediately, the host confirms with settingsChanged.
     setCfg((c) => (c ? { ...c, ...patchFor(key, value) } : c));
-    act('updateSetting', { key, value });
+    clearTimeout(timers.current[key]);
+    // Drag-style inputs (slider, color picker) fire per pixel; write once they settle.
+    if (key === 'inlineBlame.opacity' || key === 'inlineBlame.color') {
+      timers.current[key] = setTimeout(() => act('updateSetting', { key, value }), 250);
+    } else act('updateSetting', { key, value });
   };
 
   return (
@@ -117,6 +122,8 @@ function patchFor(key: SettingKey, value: unknown): Partial<Config> {
     'inlineBlame.enabled': 'blameEnabled',
     'inlineBlame.format': 'blameFormat',
     'inlineBlame.delay': 'blameDelay',
+    'inlineBlame.color': 'blameColor',
+    'inlineBlame.opacity': 'blameOpacity',
   };
   return { [map[key]]: value } as Partial<Config>;
 }
@@ -355,6 +362,8 @@ function Avatars({ cfg, set }: { cfg: Config; set: Set }) {
   );
 }
 
+const BLAME_COLORS = ['#8b949e', '#58a6ff', '#3fb950', '#d29922', '#f778ba'];
+
 function Blame({ cfg, set }: { cfg: Config; set: Set }) {
   const sample = { author: 'Hadi Esmaeili', timeAgo: timeAgo(Date.now() / 1000 - 7200, false), summary: 'feat: new UI', hash: 'a1b2c3d', date: new Date().toLocaleDateString() };
   const preview = cfg.blameFormat.replace(/\$\{(\w+)\}/g, (_, k: string) => (sample as Record<string, string>)[k] ?? '');
@@ -367,7 +376,44 @@ function Blame({ cfg, set }: { cfg: Config; set: Set }) {
         <Field value={cfg.blameFormat} onCommit={(v) => set('inlineBlame.format', v)} />
         <div className={cx('blame-preview mono', !cfg.blameEnabled && 'off')}>
           <span className="code">const [isOpen, setIsOpen] = useState(true);</span>
-          <span className="ghost">{preview}</span>
+          <span className="ghost" style={{ color: cfg.blameColor || undefined, opacity: cfg.blameOpacity / 100 }}>{preview}</span>
+        </div>
+      </Row>
+      <Row title="Color" desc="Theme default, or pick your own.">
+        <div className="blame-colors">
+          <button
+            className={cx('swatch auto', !cfg.blameColor && 'on')}
+            title="Theme default"
+            aria-label="Theme default"
+            onClick={() => set('inlineBlame.color', '')}
+          />
+          {BLAME_COLORS.map((c) => (
+            <button
+              key={c}
+              className={cx('swatch', cfg.blameColor.toLowerCase() === c && 'on')}
+              style={{ background: c }}
+              title={c}
+              aria-label={c}
+              onClick={() => set('inlineBlame.color', c)}
+            />
+          ))}
+          <label className={cx('swatch custom', !!cfg.blameColor && !BLAME_COLORS.includes(cfg.blameColor.toLowerCase()) && 'on')} title="Custom color">
+            <input type="color" value={cfg.blameColor || '#888888'} onChange={(e) => set('inlineBlame.color', e.target.value)} />
+          </label>
+        </div>
+      </Row>
+      <Row title="Intensity" desc="How strongly the blame text shows.">
+        <div className="blame-intensity">
+          <input
+            type="range"
+            min={10}
+            max={100}
+            step={5}
+            value={cfg.blameOpacity}
+            aria-label="Intensity"
+            onChange={(e) => set('inlineBlame.opacity', Number(e.target.value))}
+          />
+          <span className="mono">{cfg.blameOpacity}%</span>
         </div>
       </Row>
       <Row title="Delay" desc="Milliseconds before the blame appears (0–2000).">

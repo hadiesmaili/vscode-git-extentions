@@ -184,6 +184,10 @@ export interface Config extends Settings {
   blameEnabled: boolean;
   blameFormat: string;
   blameDelay: number;
+  /** Hex color, or '' for the theme's CodeLens color. */
+  blameColor: string;
+  /** 10–100 (%). */
+  blameOpacity: number;
   customAvatars: string[];
   version: string;
   vscodeVersion: string;
@@ -201,7 +205,9 @@ export type SettingKey =
   | 'avatars.gravatar'
   | 'inlineBlame.enabled'
   | 'inlineBlame.format'
-  | 'inlineBlame.delay';
+  | 'inlineBlame.delay'
+  | 'inlineBlame.color'
+  | 'inlineBlame.opacity';
 
 export type Calendar = 'gregory' | 'persian' | 'islamic-umalqura';
 

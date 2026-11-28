@@ -683,3 +683,51 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* ---- blame color / intensity ---- */
+
+.blame-colors {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.swatch {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  overflow: hidden;
+}
+.swatch.on {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--accent);
+}
+.swatch.auto {
+  background: linear-gradient(135deg, var(--text-faint) 50%, var(--bg) 50%);
+}
+.swatch.custom {
+  background: conic-gradient(#f55, #fd5, #5d5, #5df, #55f, #f5f, #f55);
+}
+.swatch.custom input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.blame-intensity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.blame-intensity input {
+  width: 120px;
+  accent-color: var(--accent);
+}
+.blame-intensity span {
+  font-size: 11px;
+  color: var(--text-muted);
+  min-width: 32px;
+  text-align: right;
+}

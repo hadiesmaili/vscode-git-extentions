@@ -110,6 +110,8 @@ export class Controller implements HostImpl {
       blameEnabled: c.get<boolean>('inlineBlame.enabled', true),
       blameFormat: c.get<string>('inlineBlame.format', '${author}, ${timeAgo} • ${summary}'),
       blameDelay: c.get<number>('inlineBlame.delay', 150),
+      blameColor: c.get<string>('inlineBlame.color', ''),
+      blameOpacity: c.get<number>('inlineBlame.opacity', 100),
       customAvatars: this.avatars.list(),
       version: this.version,
       vscodeVersion: vscode.version,
@@ -544,6 +546,8 @@ const SETTING_RULES: Record<SettingKey, (v: unknown) => boolean> = {
   'inlineBlame.enabled': (v) => typeof v === 'boolean',
   'inlineBlame.format': (v) => typeof v === 'string' && v.length <= 200,
   'inlineBlame.delay': intIn(0, 2000),
+  'inlineBlame.color': (v) => typeof v === 'string' && (v === '' || /^#[0-9a-f]{6}$/i.test(v)),
+  'inlineBlame.opacity': intIn(10, 100),
 };
 
 /** Diffs opened from the graph go beside it so the graph stays visible. */

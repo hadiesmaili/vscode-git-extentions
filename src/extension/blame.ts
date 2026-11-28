@@ -10,7 +10,6 @@ const MAX_SIZE = 1_000_000;
 export class InlineBlame implements vscode.Disposable {
   private readonly deco = vscode.window.createTextEditorDecorationType({
     after: {
-      color: new vscode.ThemeColor('editorCodeLens.foreground'),
       fontStyle: 'italic',
       margin: '0 0 0 3em',
     },
@@ -73,7 +72,18 @@ export class InlineBlame implements vscode.Disposable {
     this.current = { uri: editor.document.uri.toString(), line, blame: b };
     const text = this.format(b);
     const end = editor.document.lineAt(line).range.end;
-    editor.setDecorations(this.deco, [{ range: new vscode.Range(end, end), renderOptions: { after: { contentText: text } } }]);
+    editor.setDecorations(this.deco, [{ range: new vscode.Range(end, end), renderOptions: { after: { contentText: text, ...this.style() } } }]);
+  }
+
+  private style(): vscode.ThemableDecorationAttachmentRenderOptions {
+    const c = vscode.workspace.getConfiguration('gitWorkspace.inlineBlame');
+    const hex = c.get<string>('color', '');
+    const op = Math.min(100, Math.max(10, c.get<number>('opacity', 100))) / 100;
+    return {
+      color: /^#[0-9a-f]{6}$/i.test(hex) ? hex : new vscode.ThemeColor('editorCodeLens.foreground'),
+      // Attachments have no opacity option; this CSS injection is the usual workaround.
+      textDecoration: `none; opacity: ${op}`,
+    };
   }
 
   private format(b: BlameLine): string {
