@@ -2,7 +2,7 @@
   "name": "git-workspace-graph",
   "displayName": "Git Workspace Graph",
   "description": "Modern Git graph, source control and inline blame for VS Code.",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "publisher": "HadiEsmaeili",
   "license": "MIT",
   "author": {
