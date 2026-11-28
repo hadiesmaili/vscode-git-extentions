@@ -12,7 +12,7 @@ Do your daily Git work without opening a terminal.
 [![VS Code](https://img.shields.io/badge/VS%20Code-%E2%89%A51.90-22d3ee?style=flat-square&logo=visualstudiocode&logoColor=white)](https://code.visualstudio.com/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-4ade80?style=flat-square)](LICENSE)
 
-<img src="docs/screenshots/graph.png" alt="Git Graph with commit details" width="100%" />
+<img src="docs/screenshots/graph.png" alt="Git Graph in Comfortable density with commit details" width="100%" />
 
 </div>
 
@@ -36,11 +36,23 @@ Do your daily Git work without opening a terminal.
 ### Git Graph
 
 - **Branch topology** drawn as smooth, colored lanes. HEAD, merge commits and uncommitted changes each have their own node style.
-- **Three row densities.** *Compact*, *Comfortable* and *Spacious*. Spacious has large ring nodes and a separate column for branch badges.
+- **Three row densities.** *Comfortable* (default), *Compact* and *Spacious*. See [Row density](#row-density).
 - **Filters and search.** Show all, local or remote branches, or a single branch. Search by message, author, email, hash or ref, then jump between matches with <kbd>Enter</kbd>.
 - **Commit details.** A resizable panel shows the message, parents and refs, and every changed file with its line counts. Click a file to open it in the VS Code diff editor.
 - **Context menus.** Right-click a commit to check it out, create a branch or tag, cherry-pick, revert or reset (soft, mixed or hard). Right-click a branch badge to check it out, merge, rebase, push, rename or delete it.
 - **Large histories.** The list is virtualized and loads more commits as you scroll.
+
+### Row density
+
+Choose how tightly the commit list is packed. Change it from the **View options** button (☰) at the top right of the graph, the ⚙ settings modal, or the `gitWorkspace.graph.density` setting.
+
+**Comfortable** (default): 36px rows. A balance between readability and the number of commits on screen.
+
+<img src="docs/screenshots/density-comfortable.png" alt="Commit list in Comfortable density" width="100%" />
+
+| **Compact**: 28px rows, the most commits on screen | **Spacious**: 54px rows, large nodes and a separate branch column |
+|---|---|
+| ![Commit list in Compact density](docs/screenshots/density-compact.png) | ![Commit list in Spacious density](docs/screenshots/density-spacious.png) |
 
 ### Source Control sidebar
 
