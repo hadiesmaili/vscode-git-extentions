@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="media/icon.png" width="96" alt="Git Workspace logo" />
+<img src="media/icon.png" width="96" alt="Git Workspace Graph logo" />
 
-# Git Workspace
+# Git Workspace Graph
 
 **A modern Git graph, source control panel and inline blame for VS Code.**
 Do your daily Git work without opening a terminal.
@@ -56,16 +56,30 @@ Do your daily Git work without opening a terminal.
 
 <br clear="right" />
 
+### Git Graph button in Source Control
+
+The extension adds a **Git Graph** button (merge icon) to the title bar of VS Code's built-in **Source Control** view, next to the commit box. Click it to open the Git Graph without leaving the view you are working in.
+
 ### Hover cards
 
 | Author card | Date card |
 |---|---|
 | ![Author card](docs/screenshots/author-card.png) | ![Date card](docs/screenshots/date-card.png) |
-| Commit count, first and last activity, other names used with the same email, and a custom avatar. | Relative and full time with time zone in your calendar (**Gregorian**, **Solar Hijri (Shamsi)** or **Lunar Hijri (Qamari)**), ISO 8601 and Unix values. Use ✏️ to change the calendar or date format. |
+| Commit count, first and last activity, other names used with the same email, and a custom avatar. | Relative and full date and time with time zone, in your calendar: **Gregorian** (default), **Solar Hijri** or **Lunar Hijri**. Also ISO 8601 and Unix values, one click to copy. Use ✏️ to change the calendar or date format. |
 
 ### Inline blame
 
-The current line shows a faint note with the author, the time and the commit summary. Hover over it for details and an **Open in Git Graph** link. You can change the format and the delay.
+<img src="docs/screenshots/inline-blame.png" alt="Inline blame note and hover on the current line" width="100%" />
+
+When you click a line in the editor, a faint note appears at its end with the author, the time and the summary of the last commit that changed that line.
+
+Move the pointer over the note to see a short description of that change:
+
+- author, relative time and exact date
+- commit message
+- short hash and an **Open in Git Graph** link, which selects that commit in the graph
+
+You can change the note format and the delay, or turn it off, in [Settings](#settings).
 
 ### Themes and palettes
 
@@ -94,7 +108,7 @@ Requires VS Code 1.90 or newer and Git on your `PATH` (or set `git.path`).
 
 | What | How |
 |---|---|
-| Open the Git Graph | <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>G</kbd> (<kbd>⌘</kbd>+<kbd>Alt</kbd>+<kbd>G</kbd> on macOS), or the **Git Workspace** icon in the Activity Bar → arrow on the working tree card |
+| Open the Git Graph | <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>G</kbd> (<kbd>⌘</kbd>+<kbd>Alt</kbd>+<kbd>G</kbd> on macOS), the **Git Graph** button in the Source Control title bar, or the **Git Workspace** icon in the Activity Bar → arrow on the working tree card |
 | Show or hide commit details | Click a commit, or press <kbd>Enter</kbd> / <kbd>Space</kbd> |
 | Move between commits | <kbd>↑</kbd> <kbd>↓</kbd> <kbd>PgUp</kbd> <kbd>PgDn</kbd> <kbd>Home</kbd> <kbd>End</kbd> |
 | Search | <kbd>/</kbd> or <kbd>Ctrl</kbd>+<kbd>F</kbd>, then <kbd>Enter</kbd> / <kbd>Shift</kbd>+<kbd>Enter</kbd> for the next or previous match |
